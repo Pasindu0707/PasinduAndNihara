@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Pasindu &amp; Nihara — 16 &amp; 17 January 2027</title>
+<meta name="description" content="Pasindu and Nihara invite you to their wedding. St. Joseph's Church, Wennappuwa on the 16th of January 2027, and The Glasshouse on the 17th.">
+<meta name="theme-color" content="#FBF7EF">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pasindu &amp; Nihara are getting married">
+<meta property="og:description" content="16 January 2027 — St. Joseph's Church, Wennappuwa. 17 January — The Glasshouse.">
+<meta property="og:image" content="assets/img/share-card.jpg">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,200..600&family=Jost:wght@300;400&family=Petit+Formal+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="is-locked">
+
+<!-- ══════════ THE ENVELOPE ══════════ -->
+<div class="envelope-stage" id="envelopeStage">
+  <div class="envelope-scene">
+
+    <div class="env-address">
+      <span class="env-address__label">To</span>
+      <span class="env-address__name" id="envelopeName">our dear friend</span>
+    </div>
+
+    <div class="envelope" id="envelope">
+      <div class="env-body"></div>
+
+      <article class="env-letter" id="envLetter">
+        <svg class="lily lily--letter" viewBox="0 0 64 96" aria-hidden="true"><use href="#lily"/></svg>
+        <p class="env-letter__eyebrow">You are invited to the wedding of</p>
+        <p class="env-letter__names">Pasindu<span>&amp;</span>Nihara</p>
+        <p class="env-letter__date">16 &amp; 17 January 2027</p>
+      </article>
+
+      <div class="env-front"></div>
+
+      <div class="env-flap" id="envFlap"></div>
+
+      <button class="env-seal" id="envSeal" type="button" aria-label="Open the invitation">
+        <svg class="lily lily--seal" viewBox="0 0 64 96" aria-hidden="true"><use href="#lily"/></svg>
+        <span class="env-seal__initials">P<i>·</i>N</span>
+      </button>
+    </div>
+
+    <p class="envelope-hint" id="envelopeHint">Tap the seal to open</p>
+  </div>
+</div>
+
+
+<!-- ══════════ HERO ══════════ -->
+<header class="hero" id="hero" data-act="day">
+  <video class="hero__video" id="heroVideo"
+         poster="assets/video/hero-poster.webp"
+         muted loop playsinline preload="none" aria-hidden="true">
+    <source src="assets/video/hero.webm" type="video/webm">
+    <source src="assets/video/hero.mp4" type="video/mp4">
+  </video>
+  <div class="hero__scrim"></div>
+
+  <div class="hero__inner">
+    <p class="hero__verse reveal">
+      “Many waters cannot quench love,<br>neither can the floods drown it.”
+      <span class="hero__ref">Song of Solomon 8:7</span>
+    </p>
+
+    <h1 class="hero__names">
+      <span class="reveal" style="--d:.1s">Pasindu</span>
+      <span class="hero__amp reveal" style="--d:.25s">and</span>
+      <span class="reveal" style="--d:.4s">Nihara</span>
+    </h1>
+
+    <p class="hero__date reveal" style="--d:.6s">16 &amp; 17 January 2027 · Wennappuwa</p>
+  </div>
+
+  <a class="hero__scroll" href="#invite" aria-label="Scroll to the invitation">
+    <span></span>
+  </a>
+</header>
+
+
+<main id="main">
+
+<!-- ══════════ THE INVITATION LINE ══════════ -->
+<section class="invite" id="invite" data-act="day">
+  <div class="wrap wrap--narrow">
+
+    <p class="invite__opening reveal">Pasindu &amp; Nihara invite</p>
+
+    <div class="invite__line" id="inviteLine">
+      <span class="invite__guest" id="guestName">you and your family</span>
+      <svg class="invite__rule" viewBox="0 0 600 8" preserveAspectRatio="none" aria-hidden="true">
+        <line x1="2" y1="4" x2="598" y2="4"/>
+      </svg>
+    </div>
+
+    <p class="invite__closing reveal">to join the celebration of our love</p>
+
+    <div class="invite__parents reveal">
+      <p><span class="label">Bride</span> Anne Nihara Gimhani Fernando<br>
+         <em>Daughter of Mr. Anura Fernando &amp; Mrs. Nisansala Wikramasekara</em></p>
+      <p><span class="label">Groom</span> Pasindu Maleeshana Fernando<br>
+         <em>Son of Mr. Sujith Fernando &amp; Mrs. Chintha Munasinghe</em></p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ COUNTDOWN ══════════ -->
+<section class="countdown" id="countdown" data-act="day">
+  <div class="wrap">
+    <p class="label reveal">Until the church doors open</p>
+    <div class="countdown__row reveal" id="countdownRow" role="timer" aria-live="off">
+      <div class="countdown__unit"><b id="cdDays">—</b><span>days</span></div>
+      <div class="countdown__unit"><b id="cdHours">—</b><span>hours</span></div>
+      <div class="countdown__unit"><b id="cdMins">—</b><span>minutes</span></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ THE STORY / DISTANCE METER ══════════ -->
+<section class="story" id="story" data-act="day">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="label">Ten years, two countries, one church</p>
+      <h2 class="section-title">How we got here</h2>
+    </header>
+
+    <ol class="chapters" id="chapters">
+
+      <li class="chapter reveal">
+        <div class="chapter__meta">
+          <span class="chapter__year">2016</span>
+          <span class="chapter__gap" data-km="0">a few pews apart</span>
+        </div>
+        <div class="chapter__body">
+          <p>We met as children at Sunday school, in the same church we'll walk into
+             on the sixteenth. It took a few more years and, on the
+             <b>29th of October 2016</b>, Pasindu finally asked.</p>
+        </div>
+        <figure class="chapter__pic chapter__pic--pair">
+          <img src="assets/img/story-2016-500.webp" width="500" height="374" loading="lazy" decoding="async" alt="Pasindu and Nihara as teenagers">
+          <img src="assets/img/story-2017-500.webp" width="500" height="667" loading="lazy" decoding="async" alt="An early photo of the two of them">
+        </figure>
+      </li>
+
+      <li class="chapter reveal">
+        <div class="chapter__meta">
+          <span class="chapter__year">2017</span>
+          <span class="chapter__gap chapter__gap--far" data-km="7599">7,599 km apart</span>
+        </div>
+        <div class="chapter__body">
+          <p>In December, Nihara's family moved to Italy. A walk across town became a
+             seven-thousand-kilometre phone call and a great deal of time-zone arithmetic.
+             Neither of us treated it as an ending.</p>
+        </div>
+      </li>
+
+      <li class="chapter reveal">
+        <div class="chapter__meta">
+          <span class="chapter__year">2018 — 2022</span>
+          <span class="chapter__gap" data-km="0">0 km, then 7,599 again</span>
+        </div>
+        <div class="chapter__body">
+          <p>She came home when she could. A bus ride. A rooftop in Colombo. A few weeks
+             that went far too quickly, and then the airport again. We got very good at
+             saying goodbye and very bad at meaning it.</p>
+        </div>
+        <figure class="chapter__pic chapter__pic--pair">
+          <img src="assets/img/story-2018-500.webp" width="500" height="667" loading="lazy" decoding="async" alt="On a bus together">
+          <img src="assets/img/story-2019-500.webp" width="500" height="667" loading="lazy" decoding="async" alt="On a rooftop in Colombo">
+        </figure>
+      </li>
+
+      <li class="chapter reveal">
+        <div class="chapter__meta">
+          <span class="chapter__year">2023</span>
+          <span class="chapter__gap" data-km="0">0 km</span>
+        </div>
+        <div class="chapter__body">
+          <p>In January, Pasindu went to meet her family properly.
+             Very little felt uncertain after that.</p>
+        </div>
+        <figure class="chapter__pic">
+          <img src="assets/img/story-2022-500.webp" width="500" height="667" loading="lazy" decoding="async" alt="Together in December">
+        </figure>
+      </li>
+
+      <li class="chapter reveal">
+        <div class="chapter__meta">
+          <span class="chapter__year">16 January 2025</span>
+          <span class="chapter__gap" data-km="0">0 km</span>
+        </div>
+        <div class="chapter__body">
+          <p>He asked again — properly this time. She said yes, and then got on
+             another plane, because that is how the last ten years have gone.</p>
+        </div>
+        <figure class="chapter__pic">
+          <img src="assets/img/story-2025-500.webp" width="500" height="667" loading="lazy" decoding="async" alt="Pasindu and Nihara at their engagement">
+        </figure>
+      </li>
+
+      <li class="chapter chapter--final reveal">
+        <div class="chapter__meta">
+          <span class="chapter__year">16 January 2027</span>
+          <span class="chapter__gap chapter__gap--zero" data-km="0">0 km — for good</span>
+        </div>
+        <div class="chapter__body">
+          <p class="chapter__closer">Two years to the day. The same church.
+             This time we don't leave separately.</p>
+        </div>
+      </li>
+
+    </ol>
+  </div>
+</section>
+
+
+<!-- ══════════ DAY ONE — THE CHURCH ══════════ -->
+<section class="day day--church" id="day-one" data-act="day">
+  <div class="wrap">
+    <div class="day__grid">
+
+      <figure class="day__figure reveal">
+        <img src="assets/img/church-mood-640.webp"
+             srcset="assets/img/church-mood-640.webp 640w, assets/img/church-mood-1000.webp 1000w"
+             sizes="(min-width: 900px) 44vw, 88vw"
+             width="640" height="882" loading="lazy" decoding="async"
+             alt="Pasindu and Nihara in black and white">
+      </figure>
+
+      <div class="day__copy">
+        <p class="label reveal">The first day</p>
+        <h2 class="day__title reveal">The Ceremony</h2>
+        <p class="day__when reveal">Saturday, 16 January 2027 · 9.30 in the morning</p>
+
+        <dl class="detail reveal">
+          <dt>Where</dt>
+          <dd>St. Joseph's Church<br>Wennappuwa</dd>
+          <dt>Arrive by</dt>
+          <dd>9.15 a.m. — fifteen minutes before we begin</dd>
+          <dt>Afterwards</dt>
+          <dd>Photographs with us, and a refreshment pack for every guest</dd>
+        </dl>
+
+        <div class="actions reveal">
+          <a class="btn" href="https://maps.app.goo.gl/BgHC7fF4wiEzq1Jw8" target="_blank" rel="noopener">Get directions</a>
+          <button class="btn btn--ghost" type="button" data-ics="church">Add to calendar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ NIGHTFALL ══════════ -->
+<div class="nightfall" aria-hidden="true"></div>
+
+
+<!-- ══════════ DAY TWO — THE PARTY ══════════ -->
+<section class="day day--party" id="day-two" data-act="night">
+  <div class="wrap">
+    <div class="day__grid day__grid--flip">
+
+      <figure class="day__figure reveal">
+        <img src="assets/img/party-mood-800.webp"
+             srcset="assets/img/party-mood-800.webp 800w, assets/img/party-mood-1300.webp 1300w"
+             sizes="(min-width: 900px) 44vw, 88vw"
+             width="800" height="1200" loading="lazy" decoding="async"
+             alt="Pasindu and Nihara at an evening celebration">
+      </figure>
+
+      <div class="day__copy">
+        <p class="label reveal">The second day</p>
+        <h2 class="day__title reveal">The Celebration</h2>
+        <p class="day__when reveal">Sunday, 17 January 2027 · from 7.00 in the evening</p>
+
+        <dl class="detail reveal">
+          <dt>Where</dt>
+          <dd>The Glasshouse<br>Wennappuwa</dd>
+          <dt>Doors</dt>
+          <dd>7.00 p.m. — we make our entrance at 7.30</dd>
+          <dt>Dress</dt>
+          <dd>Dark tones welcome</dd>
+          <dt>Children</dt>
+          <dd>If your invitation is addressed to your family, your children are included. Please bring them.</dd>
+        </dl>
+
+        <div class="actions reveal">
+          <a class="btn" href="https://maps.app.goo.gl/im949FUqQkb3Y2126" target="_blank" rel="noopener">Get directions</a>
+          <button class="btn btn--ghost" type="button" data-ics="party">Add to calendar</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ RSVP ══════════ -->
+<section class="rsvp" id="rsvp" data-act="night">
+  <div class="wrap wrap--narrow">
+    <header class="section-head reveal">
+      <p class="label">For the evening of the 17th</p>
+      <h2 class="section-title">Will you be there?</h2>
+      <p class="rsvp__note">Please let us know before <b>28 December 2026</b>.</p>
+    </header>
+
+    <form class="rsvp__form reveal" id="rsvpForm" novalidate>
+      <p class="rsvp__for">Replying for <b id="rsvpFor">you and your family</b></p>
+
+      <fieldset class="choice">
+        <legend class="label">Are you coming?</legend>
+        <label class="choice__opt">
+          <input type="radio" name="attending" value="yes" required>
+          <span>Yes, we'll be there</span>
+        </label>
+        <label class="choice__opt">
+          <input type="radio" name="attending" value="no">
+          <span>Sorry, we can't make it</span>
+        </label>
+      </fieldset>
+
+      <div class="field field--count" id="countField" hidden>
+        <label class="label" for="guestCount">How many of you are coming?</label>
+        <input type="number" id="guestCount" name="count" min="1" step="1" value="1" inputmode="numeric">
+      </div>
+
+      <div class="field">
+        <label class="label" for="guestPhone">Phone number <i>(optional)</i></label>
+        <input type="tel" id="guestPhone" name="phone" autocomplete="tel" placeholder="07X XXX XXXX">
+      </div>
+
+      <div class="field">
+        <label class="label" for="guestMessage">A message for us <i>(optional)</i></label>
+        <textarea id="guestMessage" name="message" rows="3" placeholder="Anything you'd like to say"></textarea>
+      </div>
+
+      <button class="btn btn--solid" type="submit" id="rsvpSubmit">Send our reply</button>
+      <p class="rsvp__status" id="rsvpStatus" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+</section>
+
+
+<!-- ══════════ GALLERY ══════════ -->
+<section class="gallery" id="gallery" data-act="night">
+  <div class="wrap">
+    <header class="section-head reveal">
+      <p class="label">Ten years of it</p>
+      <h2 class="section-title">The long way round</h2>
+    </header>
+  </div>
+  <div class="gallery__rail" id="galleryRail">
+    <!-- filled by main.js -->
+  </div>
+  <p class="gallery__hint">Swipe →</p>
+</section>
+
+
+<!-- ══════════ SIGN OFF ══════════ -->
+<footer class="signoff" data-act="night">
+  <div class="wrap wrap--narrow">
+    <svg class="lily lily--signoff" viewBox="0 0 64 96" aria-hidden="true"><use href="#lily"/></svg>
+    <p class="signoff__line">We would rather have you there than anything you could bring.</p>
+    <p class="signoff__names">Pasindu &amp; Nihara</p>
+    <p class="signoff__tag">#PasinduWedsNihara</p>
+
+    <div class="signoff__contacts">
+      <p class="label">Any questions, call or message us</p>
+      <a class="contact" href="https://wa.me/94778909086" target="_blank" rel="noopener">
+        <span>Pasindu</span> 077 890 9086</a>
+      <a class="contact" href="https://wa.me/94760380068" target="_blank" rel="noopener">
+        <span>Nihara</span> 076 038 0068</a>
+    </div>
+  </div>
+</footer>
+
+</main>
+
+<!-- audio toggle (hidden until a track exists) -->
+<button class="music" id="musicToggle" type="button" hidden aria-pressed="false" aria-label="Play music">
+  <span class="music__bars"><i></i><i></i><i></i></span>
+</button>
+
+<!-- shared arum lily -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="lily" viewBox="0 0 64 96">
+      <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M32 54C15 49 8.5 31 18.5 16.5 26.5 5 45 2.5 53 11c7.5 8 5 24-9 33-3.6 2.6-7.6 6.4-12 10Z"/>
+        <path d="M33.5 45c-2.5-8-1.5-18 2-24.5"/>
+        <path d="M32 54v38"/>
+        <path d="M32 74c-6-1.5-10-6-11-12 6.5.5 10 4 11 8"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>

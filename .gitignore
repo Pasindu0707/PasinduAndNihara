@@ -1,0 +1,11 @@
+# original photos and video — the built WebP/MP4 in site/assets are what ship
+img/
+
+# working notes and the send-sheet (contains phone numbers)
+QUESTIONNAIRE.md
+NEXT_STEPS.md
+color_pallete.jpeg
+tools/links.html
+
+.claude/
+node_modules/
