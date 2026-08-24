@@ -844,8 +844,8 @@ main > footer{ padding-block: var(--pad-block); }
   font-size:clamp(16rem, 40vw, 30rem);
   line-height:.75;
   letter-spacing:-.04em;
-  color: color-mix(in srgb, var(--accent) 3%, transparent);
-  -webkit-text-stroke:1.5px color-mix(in srgb, var(--accent) 8%, transparent);
+  color: transparent;
+  -webkit-text-stroke:1.5px color-mix(in srgb, var(--accent) 5%, transparent);
   pointer-events:none;
   user-select:none;
 }
@@ -853,8 +853,8 @@ main > footer{ padding-block: var(--pad-block); }
 
 /* gold on near-black carries further than sage on cream */
 [data-act="night"] .day__ghost{
-  color: color-mix(in srgb, var(--gilt) 2.5%, transparent);
-  -webkit-text-stroke-color: color-mix(in srgb, var(--gilt) 7%, transparent);
+  color: transparent;
+  -webkit-text-stroke-color: color-mix(in srgb, var(--gilt) 5%, transparent);
 }
 
 @media (max-width:55.99rem){
@@ -950,8 +950,8 @@ main > footer{ padding-block: var(--pad-block); }
 .detail dt{
   margin:0;
   font-weight:400;
-  font-size:.6875rem; letter-spacing:.2em; text-transform:uppercase;
-  color: var(--accent);
+  font-size:.75rem; letter-spacing:.13em; text-transform:uppercase;
+  color: color-mix(in srgb, var(--text) 88%, transparent);
 }
 .detail dd{
   margin:0;
