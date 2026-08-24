@@ -955,16 +955,46 @@ main > footer{ padding-block: var(--pad-block); }
 .day__copy .detail > div{ justify-items:center; }
 
 
-/* dusk — cream to night through a real sunset ramp. Mixing cream with the
-   gold token put an olive-brown in the middle, which is where the mud was. */
+/* the bridge between the two days — it says what happens next rather than
+   just changing colour */
+.bridge{
+  position:relative; z-index:3;
+  display:flex; align-items:center; gap:clamp(.75rem,3vw,1.25rem);
+  margin:clamp(2.5rem,7vw,4rem) auto 0;
+  max-width:34rem;
+  text-decoration:none;
+}
+.bridge__mark{
+  flex:none;
+  display:grid; justify-items:center; gap:.45rem;
+}
+.bridge:hover .bridge__lily{ transform:translateY(2px); }
+.bridge__rule{
+  flex:1; height:1px;
+  background:linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 45%, transparent));
+}
+.bridge__rule:last-child{ transform:scaleX(-1); }
+.bridge__lily{
+  flex:none; width:1.15rem;
+  transition:transform .4s var(--ease);
+  color: color-mix(in srgb, var(--accent) 70%, transparent);
+  stroke-width:3;
+}
+.bridge__text{
+  flex:none;
+  font-size:.5625rem; letter-spacing:.3em; text-transform:uppercase;
+  color: var(--accent);
+  text-align:center;
+}
+
+/* dusk — short and low in chroma. A long ramp from cream to near-black has
+   to pass through something, and the longer it lingers the muddier it looks. */
 .nightfall{
-  height:clamp(6rem,16vh,9rem);
+  height:clamp(3rem,8vh,4.5rem);
   background:linear-gradient(180deg,
     #F9F3E5  0%,
-    #EBD6BD 20%,
-    #CFA391 42%,
-    #9E5A50 62%,
-    #5D2029 82%,
+    #C9AFA8 42%,
+    #4A2028 78%,
     #190A0E 100%);
 }
 
