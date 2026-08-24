@@ -384,7 +384,7 @@ main > footer{ padding-block: var(--pad-block); }
   position:relative; z-index:3;
   width:100%; max-width:var(--max);
   margin-inline:auto;
-  padding: 5.5rem clamp(2rem, 9vw, 4rem);
+  padding: 5rem clamp(1.25rem, 6vw, 4rem);
   text-align:center;
   color: var(--lily);
   text-shadow:0 1px 26px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.3);
@@ -399,7 +399,7 @@ main > footer{ padding-block: var(--pad-block); }
 
 .hero__eyebrow{
   margin:0 0 clamp(1.25rem,4vw,2rem);
-  font-size:.5625rem; letter-spacing:.38em; text-transform:uppercase;
+  font-size:.625rem; letter-spacing:.34em; text-transform:uppercase;
   color: color-mix(in srgb, var(--gilt) 92%, transparent);
 }
 
@@ -407,9 +407,9 @@ main > footer{ padding-block: var(--pad-block); }
   margin:0;
   font-family: var(--display);
   font-weight:200;
-  font-size:clamp(2.9rem, 16vw, 8rem);
-  line-height:.98;
-  letter-spacing:-.025em;
+  font-size:clamp(3.4rem, 19vw, 9.5rem);
+  line-height:.96;
+  letter-spacing:-.03em;
 }
 .hero__names > span{ display:block; }
 
@@ -451,24 +451,24 @@ main > footer{ padding-block: var(--pad-block); }
 
 .hero__verse{
   margin:0 auto;
-  max-width:24rem;
+  max-width:26rem;
   font-family: var(--display);
   font-weight:250; font-style:italic;
-  font-size:clamp(.9rem,3.2vw,1.1rem);
+  font-size:clamp(1rem,3.8vw,1.25rem);
   line-height:1.7;
   color: color-mix(in srgb, var(--cream) 92%, transparent);
 }
 .hero__ref{
-  display:block; margin-top:.75rem;
+  display:block; margin-top:.8rem;
   font-family: var(--body); font-style:normal;
-  font-size:.5rem; letter-spacing:.3em; text-transform:uppercase;
+  font-size:.5625rem; letter-spacing:.28em; text-transform:uppercase;
   color: color-mix(in srgb, var(--gilt) 88%, transparent);
 }
 
 .hero__place{
   margin:clamp(1.75rem,5vw,2.5rem) auto 0;
-  max-width:22rem;
-  font-size:.5625rem; letter-spacing:.26em; text-transform:uppercase;
+  max-width:24rem;
+  font-size:.625rem; letter-spacing:.24em; text-transform:uppercase;
   line-height:2;
   color: color-mix(in srgb, var(--cream) 82%, transparent);
 }
@@ -835,25 +835,30 @@ main > footer{ padding-block: var(--pad-block); }
 .day__frame::before{ border-color: color-mix(in srgb, var(--accent) 16%, transparent); }
 
 /* the date, very large and very faint, bleeding off the edge */
+/* the date, very large behind the plate. Outlined rather than filled: at this
+   size a solid numeral fights the words, an outline sits behind them. */
 .day__ghost{
   position:absolute; z-index:1;
-  left:-.14em; top:50%; translate:0 -50%;
+  left:50%; top:50%; translate:-50% -50%;
   font-family: var(--display); font-weight:200;
-  font-size:clamp(18rem, 44vw, 34rem);
+  font-size:clamp(16rem, 40vw, 30rem);
   line-height:.75;
-  letter-spacing:-.05em;
-  color: color-mix(in srgb, var(--accent) 6%, transparent);
+  letter-spacing:-.04em;
+  color: color-mix(in srgb, var(--accent) 3%, transparent);
+  -webkit-text-stroke:1.5px color-mix(in srgb, var(--accent) 11%, transparent);
   pointer-events:none;
   user-select:none;
 }
-.day__ghost--right{ left:auto; right:-.14em; }
+.day__ghost--right{ left:50%; right:auto; }
 
 /* gold on near-black carries further than sage on cream */
-[data-act="night"] .day__ghost{ color: color-mix(in srgb, var(--gilt) 4%, transparent); }
+[data-act="night"] .day__ghost{
+  color: color-mix(in srgb, var(--gilt) 2.5%, transparent);
+  -webkit-text-stroke-color: color-mix(in srgb, var(--gilt) 9%, transparent);
+}
 
-/* on a phone the copy runs down the middle, so the numeral sits low and wide */
 @media (max-width:55.99rem){
-  .day__ghost{ top:auto; bottom:-.12em; translate:0 0; font-size:min(52vw, 22rem); }
+  .day__ghost{ font-size:min(64vw, 24rem); -webkit-text-stroke-width:1px; }
 }
 
 .day__grid{
@@ -1230,22 +1235,55 @@ main > footer{ padding-block: var(--pad-block); }
    ═══════════════════════════════════════════════════════════ */
 
 .music{
-  position:fixed; z-index:40;
-  right:1rem; bottom:1rem;
-  width:2.75rem; height:2.75rem;
+  position:fixed; z-index:60;
+  isolation:isolate;
+  right:clamp(.85rem,3vw,1.5rem);
+  bottom:clamp(.85rem,3vw,1.5rem);
+  width:3rem; height:3rem;
   display:grid; place-items:center;
   border:1px solid color-mix(in srgb, var(--gilt) 45%, transparent);
   border-radius:50%;
-  background: color-mix(in srgb, var(--night) 70%, transparent);
-  backdrop-filter:blur(8px);
+  background: color-mix(in srgb, #190A0E 72%, transparent);
+  -webkit-backdrop-filter:blur(10px);
+  backdrop-filter:blur(10px);
   cursor:pointer;
+  transition:border-color .35s var(--ease), background .35s var(--ease);
 }
-.music__bars{ display:flex; align-items:flex-end; gap:2px; height:.85rem; }
-.music__bars i{ width:2px; height:35%; background: var(--gilt); }
-.music[aria-pressed="true"] .music__bars i{ animation: bar 1s ease-in-out infinite; }
-.music__bars i:nth-child(2){ animation-delay:.18s; }
-.music__bars i:nth-child(3){ animation-delay:.36s; }
-@keyframes bar{ 0%,100%{ height:30%; } 50%{ height:100%; } }
+.music:hover{
+  border-color: color-mix(in srgb, var(--gilt) 85%, transparent);
+  background: color-mix(in srgb, #190A0E 88%, transparent);
+}
+
+.music__bars{
+  display:flex; align-items:center; gap:3px;
+  height:1rem;
+}
+.music__bars i{
+  width:2px; height:30%;
+  background: #CFB88C;
+  border-radius:1px;
+  transition:height .3s var(--ease), opacity .3s var(--ease);
+}
+
+/* playing: the bars move */
+.music.is-playing .music__bars i{ animation: bar 1.05s ease-in-out infinite; }
+.music.is-playing .music__bars i:nth-child(2){ animation-delay:.18s; }
+.music.is-playing .music__bars i:nth-child(3){ animation-delay:.36s; }
+@keyframes bar{ 0%,100%{ height:26%; } 50%{ height:100%; } }
+
+/* silent: flat, dimmed, struck through */
+.music:not(.is-playing) .music__bars i{ height:26%; opacity:.5; }
+.music:not(.is-playing)::after{
+  content:""; position:absolute;
+  width:1.5rem; height:1px;
+  background:#CFB88C;
+  opacity:.75;
+  rotate:-45deg;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .music.is-playing .music__bars i{ animation:none; height:70%; }
+}
 
 
 /* ═══════════════════════════════════════════════════════════

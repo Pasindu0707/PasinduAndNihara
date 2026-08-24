@@ -67,6 +67,18 @@ ffmpeg -v error -i "$SRC/engagement3.jpg" \
   -q:v 82 -y "$OUT/share-card.jpg"
 echo "  share-card.jpg"
 
+echo "== music =="
+# Background music sits under everything at low volume, so it is encoded mono
+# at a modest bitrate — the file is a third of the size and nobody can tell.
+SRC_AUDIO=$(ls *.mp3 2>/dev/null | head -1)
+mkdir -p site/assets/audio
+if [ -n "$SRC_AUDIO" ]; then
+  ffmpeg -v error -i "$SRC_AUDIO" -vn -ac 1 -b:a 64k -ar 44100     -af "afade=t=in:st=0:d=2" -y "site/assets/audio/theme.mp3"
+  echo "  $SRC_AUDIO  ->  theme.mp3  ($(du -h site/assets/audio/theme.mp3 | cut -f1))"
+else
+  echo "  no .mp3 in the project root — skipping"
+fi
+
 echo "== icons =="
 # Generated here on purpose: this script wipes site/assets/img, so anything
 # hand-placed in it disappears on the next rebuild. That is how the favicon

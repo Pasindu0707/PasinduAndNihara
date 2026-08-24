@@ -10,8 +10,8 @@ const CONFIG = {
   partyEnd: '2027-01-17T23:30:00+05:30',
   fallbackName: 'you and your family',
   galleryCount: 7,
-  // set to 'assets/audio/theme.mp3' once a track has been chosen
-  music: null
+  music: 'assets/audio/theme.mp3',
+  musicVolume: 0.22,        // background, not foreground
 };
 
 const $  = (s, r = document) => r.querySelector(s);
@@ -107,6 +107,7 @@ function openEnvelope(){
   stage.dataset.open = '1';
 
   document.body.classList.remove('is-locked');
+  startMusic(true);                    // the tap that opens is the tap that allows sound
   $('#envelope').classList.add('is-opening');
   $('#envelopeStage').classList.add('is-opening');
 
@@ -129,6 +130,7 @@ function setupEnvelope(){
     document.body.classList.remove('is-locked');
     stage.remove();
     playHeroVideo();
+    startMusic(false);                 // no gesture here, so it may have to wait for one
     return;
   }
 
@@ -744,26 +746,90 @@ function setupRsvp(){
 }
 
 
-/* ───────── music (only if a track has been added) ───────── */
+/* ───────── music ─────────
+   It starts when the seal is tapped, because that tap is the gesture browsers
+   require before any sound. Low, looping, and one tap away from silence — and
+   if a guest turns it off, it stays off next time they open the link. */
+
+let audio = null;
+let musicBtn = null;
+
+function musicState(on){
+  if (!musicBtn) return;
+  musicBtn.setAttribute('aria-pressed', String(on));
+  musicBtn.setAttribute('aria-label', on ? 'Turn the music off' : 'Turn the music on');
+  musicBtn.classList.toggle('is-playing', on);
+}
+
+let fadeTimer = null;
+
+function fadeTo(target, ms, done){
+  if (!audio) return;
+  clearInterval(fadeTimer);
+  const from = audio.volume;
+  const t0 = Date.now();
+  // an interval rather than requestAnimationFrame: rAF stops in a background
+  // tab, and a fade that never advances leaves the music playing at zero
+  fadeTimer = setInterval(() => {
+    const k = Math.min(1, (Date.now() - t0) / ms);
+    audio.volume = Math.max(0, Math.min(1, from + (target - from) * k));
+    if (k >= 1){
+      clearInterval(fadeTimer);
+      fadeTimer = null;
+      if (done) done();
+    }
+  }, 50);
+}
+
+function startMusic(fromTap){
+  if (!audio) return;
+  // a guest who turned it off should not be asked twice
+  try{
+    if (!fromTap && localStorage.getItem('pn-music') === 'off') return;
+  }catch{}
+
+  audio.preload = 'auto';
+  audio.play().then(() => {
+    fadeTo(CONFIG.musicVolume, 2500);
+    musicState(true);
+    try{ localStorage.setItem('pn-music', 'on'); }catch{}
+  }).catch(() => {
+    // autoplay refused — arm the next tap anywhere on the page
+    musicState(false);
+    const arm = () => { document.removeEventListener('pointerdown', arm); startMusic(true); };
+    document.addEventListener('pointerdown', arm, { once: true });
+  });
+}
+
+function stopMusic(){
+  if (!audio) return;
+  fadeTo(0, 450, () => audio.pause());
+  musicState(false);
+  try{ localStorage.setItem('pn-music', 'off'); }catch{}
+}
 
 function setupMusic(){
-  const btn = $('#musicToggle');
-  if (!btn) return;
-  if (!CONFIG.music){ btn.remove(); return; }
+  musicBtn = $('#musicToggle');
+  if (!musicBtn) return;
+  if (!CONFIG.music){ musicBtn.remove(); musicBtn = null; return; }
 
-  const audio = new Audio(CONFIG.music);
+  audio = new Audio(CONFIG.music);
   audio.loop = true;
-  audio.volume = 0.35;
+  audio.preload = 'none';
+  audio.volume = 0;
 
-  audio.addEventListener('canplaythrough', () => { btn.hidden = false; }, { once: true });
-  audio.addEventListener('error', () => { btn.remove(); }, { once: true });
+  audio.addEventListener('error', () => {
+    musicBtn?.remove();
+    musicBtn = null;
+    audio = null;
+  }, { once: true });
 
-  btn.addEventListener('click', () => {
-    const playing = btn.getAttribute('aria-pressed') === 'true';
-    if (playing){ audio.pause(); }
-    else { audio.play().catch(() => {}); }
-    btn.setAttribute('aria-pressed', String(!playing));
-    btn.setAttribute('aria-label', playing ? 'Play music' : 'Pause music');
+  musicBtn.hidden = false;
+  musicState(false);
+
+  musicBtn.addEventListener('click', () => {
+    if (!audio) return;
+    audio.paused ? startMusic(true) : stopMusic();
   });
 }
 
@@ -809,6 +875,7 @@ function devJump(){
   applyGuest();
   logOpen();
 
+  setupMusic();
   setupEnvelope();
   setupReveals();
   setupInviteLine();
@@ -821,7 +888,6 @@ function devJump(){
   setupCalendar();
   setupRsvp();
   setupShare();
-  setupMusic();
   setupThemeColour();
   devJump();
 })();

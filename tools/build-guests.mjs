@@ -100,7 +100,7 @@ for (const r of rows.slice(1)){
   const seatRaw = iSeats > -1 ? (r[iSeats] || '').trim() : '';
   const seatNum = parseInt(seatRaw, 10);
   const isCount = /^\d+$/.test(seatRaw);
-  if (seatRaw && !isCount) warn.push(`"${name}": seats = "${seatRaw}" is not a number — read as a table label`);
+  if (seatRaw && !isCount) warn.push(`"${name}": seats = "${seatRaw}" is not a number - read as a table label`);
 
   const g = { id, name };
   if (isCount)  g.seats = seatNum;
@@ -126,12 +126,12 @@ writeFileSync('site/data/guests.json', JSON.stringify({
 
 const msg = g => encodeURIComponent(
   `${g.name},\n\nPasindu & Nihara are getting married, and we would love for you to be there.\n\n` +
-  `Your invitation:\n${g.url}\n\n16 January 2027 — St. Joseph's Church, Wennappuwa\n` +
-  `17 January 2027 — The Glasshouse\n\nPlease RSVP on the page before 28 December.`
+  `Your invitation:\n${g.url}\n\n16 January 2027 - St. Joseph's Church, Wennappuwa\n` +
+  `17 January 2027 - The Glasshouse\n\nPlease RSVP on the page before 28 December.`
 );
 
 writeFileSync('tools/links.html', `<!DOCTYPE html><meta charset="utf-8">
-<title>Guest links — do not deploy</title>
+<title>Guest links - do not deploy</title>
 <style>
  body{font:15px/1.6 system-ui;margin:2rem auto;max-width:60rem;padding:0 1rem;color:#1E2620}
  h1{font-weight:500} .warn{background:#FDF3D8;border-left:3px solid #CFB88C;padding:.75rem 1rem;margin:1rem 0}
@@ -142,7 +142,7 @@ writeFileSync('tools/links.html', `<!DOCTYPE html><meta charset="utf-8">
  a.wa[href="#"]{background:#ccc;pointer-events:none}
  button{font:inherit;padding:.3rem .6rem;cursor:pointer}
 </style>
-<h1>Guest links — ${guests.length} invitations</h1>
+<h1>Guest links - ${guests.length} invitations</h1>
 <p class="warn"><b>This file is local only.</b> It contains phone numbers and is never published.
 Click <i>Send</i> to open WhatsApp with the message ready.</p>
 ${warn.length ? `<p class="warn"><b>Check these:</b><br>${warn.join('<br>')}</p>` : ''}
