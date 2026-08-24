@@ -25,6 +25,14 @@
 
 <!-- ══════════ THE ENVELOPE ══════════ -->
 <div class="envelope-stage" id="envelopeStage">
+
+  <div class="hero__frame envelope-frame" aria-hidden="true">
+    <svg class="corner corner--tl" viewBox="0 0 64 64"><use href="#corner"/></svg>
+    <svg class="corner corner--tr" viewBox="0 0 64 64"><use href="#corner"/></svg>
+    <svg class="corner corner--br" viewBox="0 0 64 64"><use href="#corner"/></svg>
+    <svg class="corner corner--bl" viewBox="0 0 64 64"><use href="#corner"/></svg>
+  </div>
+
   <div class="envelope-scene">
 
     <div class="env-address">
@@ -32,6 +40,7 @@
       <span class="env-address__name" id="envelopeName">our dear friend</span>
     </div>
 
+    <div class="envelope-tilt" id="envelopeTilt">
     <div class="envelope" id="envelope">
       <div class="env-body"></div>
 
@@ -50,6 +59,7 @@
         <svg class="lily lily--seal" viewBox="0 0 64 96" aria-hidden="true"><use href="#lily"/></svg>
         <span class="env-seal__initials">P<i>·</i>N</span>
       </button>
+    </div>
     </div>
 
     <p class="envelope-hint" id="envelopeHint">Tap the seal to open</p>
@@ -286,12 +296,17 @@
 
       <li class="beat beat--mark reveal" data-year="2025">
         <p class="beat__year">2025</p>
-        <figure class="beat__pic">
+        <figure class="beat__pic beat__pic--pair">
           <img src="assets/img/story-2025-400.webp"
                srcset="assets/img/story-2025-400.webp 400w, assets/img/story-2025-700.webp 700w"
-               sizes="(min-width: 56rem) 20rem, 42vw"
+               sizes="(min-width: 56rem) 10rem, 22vw"
                width="400" height="500" loading="lazy" decoding="async"
-               alt="Pasindu and Nihara in 2025">
+               alt="Pasindu and Nihara on the day they were engaged">
+          <img src="assets/img/story-2025b-400.webp"
+               srcset="assets/img/story-2025b-400.webp 400w, assets/img/story-2025b-700.webp 700w"
+               sizes="(min-width: 56rem) 10rem, 22vw"
+               width="400" height="500" loading="lazy" decoding="async"
+               alt="Pasindu and Nihara, engaged — 16 January 2025">
         </figure>
         <div class="beat__body">
           <p class="beat__gap">16 January</p>

@@ -31,15 +31,24 @@ encode() {
 
 echo "== act photos =="
 encode "$SRC/engagement1.jpg"  church-mood 08 "640,1000,1400"
-encode "$SRC/2024.jpeg"        party-mood  12 "800,1300"
+# the venue's own MOON LIGHT banner sits across the top of this frame and the
+# photographer's mark across the bottom, so this one is cropped at both ends
+for w in 800 1300; do
+  ffmpeg -v error -i "$SRC/2024.jpeg"     -vf "crop=iw:ih*0.72:0:ih*0.16,scale=${w}:-2:flags=lanczos"     -q:v 78 -y "$OUT/party-mood-${w}.webp"
+done
+echo "  party-mood  ->  800,1300 (cropped top and bottom)"
 
 echo "== story cards (one per year) =="
 encode "$SRC/2018.jpg"          story-2018 00 "400,700,1200"
 encode "$SRC/2019.jpg"          story-2019 00 "400,700,1200"
 encode "$SRC/2022.jpeg"         story-2022 00 "400,700"
 encode "$SRC/2023.jpeg"         story-2023 00 "400,700"
-encode "$SRC/2024.jpeg"         story-2024 12 "400,700,1066"
+for w in 400 700 1066; do
+  ffmpeg -v error -i "$SRC/2024.jpeg"     -vf "crop=iw:ih*0.72:0:ih*0.16,scale=${w}:-2:flags=lanczos"     -q:v 78 -y "$OUT/story-2024-${w}.webp"
+done
+echo "  story-2024  ->  400,700,1066 (same crop as party-mood)"
 encode "$SRC/2025.jpeg"         story-2025 00 "400,700,1200"
+encode "$SRC/engament.jpg"      story-2025b 08 "400,700,1200"
 encode "$SRC/2026.jpeg"         story-2026 00 "400,700,1200"
 
 echo "== gallery — the engagement shoot =="

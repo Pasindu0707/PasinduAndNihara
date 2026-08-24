@@ -127,6 +127,27 @@ function setupEnvelope(){
     return;
   }
 
+  // the envelope leans toward the pointer — small, and damped by CSS
+  if (!reducedMotion && matchMedia('(hover: hover)').matches){
+    const env = $('#envelope');
+    stage.addEventListener('pointermove', e => {
+      const x = (e.clientX / innerWidth  - 0.5) * 2;
+      const y = (e.clientY / innerHeight - 0.5) * 2;
+      env.style.setProperty('--tilt-y', (x * 7).toFixed(2) + 'deg');
+      env.style.setProperty('--tilt-x', (-y * 5).toFixed(2) + 'deg');
+    });
+    stage.addEventListener('pointerleave', () => {
+      env.style.setProperty('--tilt-y', '0deg');
+      env.style.setProperty('--tilt-x', '0deg');
+    });
+  }
+
+  // a few petals on the stage, so the wait is not a still picture
+  drift(stage, {
+    tints: PETAL.burst, alpha: 0.3, density: 70000, max: 14,
+    r: [4, 8], vy: [8, 18]
+  });
+
   $('#envSeal').addEventListener('click', openEnvelope);
   stage.addEventListener('click', e => {
     if (e.target.closest('.env-seal')) return;
