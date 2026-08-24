@@ -459,15 +459,19 @@ function makeBits(n, w, h, cfg){
 const drifts = [];
 let driftRunning = false;
 
-function drift(el){
+function drift(el, opts = {}){
   if (reducedMotion || !el) return;
+  const cfg = {
+    tints: PETAL.drift, alpha: 0.62, density: 21000, max: 30,
+    r: [5, 11], vy: [9, 24], ...opts
+  };
 
   const cv = document.createElement('canvas');
   cv.className = 'drift';
   cv.setAttribute('aria-hidden', 'true');
   el.append(cv);
 
-  const layer = { el, cv, ctx: cv.getContext('2d'), bits: [], w: 0, h: 0, on: false };
+  const layer = { el, cv, ctx: cv.getContext('2d'), bits: [], w: 0, h: 0, on: false, alpha: cfg.alpha };
 
   const size = () => {
     const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -476,10 +480,10 @@ function drift(el){
     cv.width  = r.width  * dpr;
     cv.height = r.height * dpr;
     layer.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    // roughly one petal per 26 000 square pixels, so a tall section is not denser
-    const n = Math.max(10, Math.min(30, Math.round(r.width * r.height / 21000)));
+    // density by area, so a tall section is not a busier one
+    const n = Math.max(8, Math.min(cfg.max, Math.round(r.width * r.height / cfg.density)));
     layer.bits = makeBits(n, r.width, r.height, {
-      r: [5, 11], vy: [9, 24], vx: 6, spin: 0.7, tints: PETAL.drift
+      r: cfg.r, vy: cfg.vy, vx: 6, spin: 0.7, tints: cfg.tints
     });
   };
   size();
@@ -497,7 +501,7 @@ function driftFrame(){
   for (const L of drifts){
     if (!L.on) continue;
     L.ctx.clearRect(0, 0, L.w, L.h);
-    L.ctx.globalAlpha = 0.62;
+    L.ctx.globalAlpha = L.alpha;
     for (const b of L.bits){
       b.y += b.vy / 60;
       b.x += Math.sin((b.y + b.a * 30) / 120) * (b.vx / 60);
@@ -510,6 +514,11 @@ function driftFrame(){
 }
 
 function setupDrift(){
+  // over the video: pale, sparse and slow, so it reads as air rather than weather
+  drift($('#hero'), {
+    tints: PETAL.burst, alpha: 0.34, density: 62000, max: 16,
+    r: [4, 8], vy: [7, 17]
+  });
   ['#invite', '#countdown'].forEach(sel => drift($(sel)));
 }
 

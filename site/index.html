@@ -64,19 +64,37 @@
          muted loop playsinline preload="none" aria-hidden="true"></video>
   <div class="hero__scrim"></div>
 
+  <!-- an engraved frame, the way the printed plate would be -->
+  <div class="hero__frame" aria-hidden="true">
+    <svg class="corner corner--tl" viewBox="0 0 64 64"><use href="#corner"/></svg>
+    <svg class="corner corner--tr" viewBox="0 0 64 64"><use href="#corner"/></svg>
+    <svg class="corner corner--br" viewBox="0 0 64 64"><use href="#corner"/></svg>
+    <svg class="corner corner--bl" viewBox="0 0 64 64"><use href="#corner"/></svg>
+  </div>
+
   <div class="hero__inner">
-    <p class="hero__verse reveal">
+    <svg class="lily hero__crest reveal" viewBox="0 0 64 96" aria-hidden="true"><use href="#lily"/></svg>
+
+    <p class="hero__eyebrow reveal" style="--d:.08s">The sixteenth &amp; seventeenth of January</p>
+
+    <h1 class="hero__names">
+      <span class="reveal" style="--d:.16s">Pasindu</span>
+      <span class="hero__amp reveal" style="--d:.3s">&amp;</span>
+      <span class="reveal" style="--d:.44s">Nihara</span>
+    </h1>
+
+    <p class="hero__flourish reveal" style="--d:.56s" aria-hidden="true">
+      <i></i><b></b><i></i>
+    </p>
+
+    <p class="hero__verse reveal" style="--d:.64s">
       “Many waters cannot quench love,<br>neither can the floods drown it.”
       <span class="hero__ref">Song of Solomon 8:7</span>
     </p>
 
-    <h1 class="hero__names">
-      <span class="reveal" style="--d:.1s">Pasindu</span>
-      <span class="hero__amp reveal" style="--d:.25s">and</span>
-      <span class="reveal" style="--d:.4s">Nihara</span>
-    </h1>
-
-    <p class="hero__date reveal" style="--d:.6s">16 &amp; 17 January 2027 · Wennappuwa</p>
+    <p class="hero__place reveal" style="--d:.74s">
+      St. Joseph’s Church · Wennappuwa<br>Two thousand and twenty&#8209;seven
+    </p>
   </div>
 
   <a class="hero__scroll" href="#invite" aria-label="Scroll to the invitation">
@@ -379,8 +397,6 @@
           <dd>7.00 p.m. — we make our entrance at 7.30</dd>
           <dt>Dress</dt>
           <dd>Dark tones welcome</dd>
-          <dt>Children</dt>
-          <dd>If your invitation is addressed to your family, your children are included. Please bring them.</dd>
         </dl>
 
         <div class="actions reveal">
@@ -500,6 +516,14 @@
         <path d="M32 54v38"/>
         <path d="M32 74c-6-1.5-10-6-11-12 6.5.5 10 4 11 8"/>
       </g>
+    </symbol>
+
+    <symbol id="corner" viewBox="0 0 64 64">
+      <g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+        <path d="M1 63V15C1 7.3 7.3 1 15 1h48"/>
+        <path d="M8 63V17.5C8 12.25 12.25 8 17.5 8H63"/>
+      </g>
+      <path d="M20 24l4-4 4 4-4 4z" fill="currentColor"/>
     </symbol>
   </defs>
 </svg>
