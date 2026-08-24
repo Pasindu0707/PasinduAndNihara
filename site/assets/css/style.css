@@ -731,12 +731,12 @@ main > footer{ padding-block: var(--pad-block); }
 .beat__pic{ margin:0 0 1rem; }
 .beat__pic--pair{
   display:grid; grid-template-columns:1fr 1fr; gap:.5rem;
-  max-width:15rem;
+  max-width:17.5rem;
 }
 .beat__pic--pair img{ max-width:none; }
-.beat__pic--pair img:first-child{ margin-top:1rem; }
+.beat__pic--pair img:first-child{ margin-top:.9rem; }
 .beat__pic img{
-  width:100%; max-width:15rem;
+  width:100%; max-width:8.5rem;
   aspect-ratio:4/5; object-fit:cover;
   border-radius:2px;
   box-shadow:0 .8rem 2rem -1rem color-mix(in srgb, var(--ink) 55%, transparent);
@@ -803,13 +803,13 @@ main > footer{ padding-block: var(--pad-block); }
      the row stops being two thirds empty */
   .beat{
     display:grid;
-    grid-template-columns:6.5rem 14rem 1fr;
+    grid-template-columns:6.5rem 17.5rem 1fr;
     grid-template-areas:"year pic body";
     column-gap:clamp(1.5rem,3vw,2.5rem);
   }
   .beat__year{ grid-area:year; text-align:right; margin:.35rem 0 0; }
   .beat__pic { grid-area:pic; margin-bottom:0; }
-  .beat__pic img{ max-width:14rem; }
+  .beat__pic img{ max-width:8.5rem; }
   .beat__body{ grid-area:body; align-self:start; padding-top:.3rem; }
 
   .beat--quiet{ grid-template-areas:"year body body"; }
@@ -828,40 +828,95 @@ main > footer{ padding-block: var(--pad-block); }
   align-items:center;
 }
 
-.day__figure{ margin:0; }
+/* the photograph is mounted, not just placed */
+.day__figure{
+  position:relative;
+  margin:0;
+  padding:clamp(.4rem,1.4vw,.6rem);
+}
+.day__figure::after{
+  content:""; position:absolute; inset:0;
+  border:1px solid color-mix(in srgb, var(--gilt) 55%, transparent);
+  pointer-events:none;
+}
 .day__figure img{
-  width:100%; border-radius:2px;
-  box-shadow:0 1.25rem 3rem -1.25rem color-mix(in srgb, var(--ink) 55%, transparent);
+  width:100%; display:block;
+  box-shadow:0 1.25rem 3rem -1.5rem color-mix(in srgb, var(--ink) 55%, transparent);
+}
+
+/* the date, set like a plate */
+.stamp{
+  display:inline-grid; justify-items:center;
+  margin:1.1rem 0 1.25rem;
+  padding:.55rem 1.4rem .7rem;
+  border-top:1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  border-bottom:1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  line-height:1;
+}
+.stamp__dow,
+.stamp__mon{
+  font-size:.5625rem; letter-spacing:.34em; text-transform:uppercase;
+  color: var(--accent);
+}
+.stamp__num{
+  font-family: var(--display); font-weight:250;
+  font-size:clamp(2.6rem,10vw,3.6rem);
+  letter-spacing:-.03em;
+  margin:.28rem 0 .34rem;
+  font-variant-numeric:tabular-nums;
 }
 
 .day__title{
-  margin:.5rem 0 .35rem;
+  margin:0 0 .3rem;
   font-family: var(--display);
   font-weight:250;
-  font-size:clamp(2.25rem,9vw,3.5rem);
+  font-size:clamp(2.1rem,8vw,3.1rem);
   line-height:1;
   letter-spacing:-.02em;
 }
 .day__when{
-  margin:0 0 2rem;
+  margin:0;
   font-family: var(--display); font-style:italic; font-weight:300;
   font-size:clamp(1rem,3.6vw,1.15rem);
   color: var(--accent);
 }
 
-.detail{ margin:0 0 2.25rem; max-width:32rem; }
-.detail dt{
-  font-size:.5625rem; letter-spacing:.3em; text-transform:uppercase;
-  color: var(--muted);
-  margin:1.35rem 0 .3rem;
+/* shared hairline flourish */
+.flourish{
+  display:flex; align-items:center; gap:.7rem;
+  margin:clamp(1.4rem,4vw,1.9rem) 0;
+  max-width:11rem;
 }
-.detail dt:first-of-type{ margin-top:0; }
+.flourish i{
+  flex:1; height:1px;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--accent) 60%, transparent), transparent);
+}
+.flourish i:first-child{ transform:scaleX(-1); }
+.flourish b{
+  width:.35rem; height:.35rem; rotate:45deg;
+  background: var(--accent);
+}
+
+/* an engraved schedule rather than a plain list */
+.detail{ margin:0 0 2rem; max-width:32rem; }
+.detail > div{
+  display:grid; gap:.3rem;
+  padding:.85rem 0;
+  border-top:1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.detail > div:last-child{
+  border-bottom:1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+}
+.detail dt{
+  margin:0;
+  font-size:.5625rem; letter-spacing:.3em; text-transform:uppercase;
+  color: var(--accent);
+}
 .detail dd{ margin:0; font-size:1rem; line-height:1.6; }
 
 .actions{ display:flex; flex-wrap:wrap; gap:.75rem; }
 
 
-/* nightfall — the page turns to evening between the two days */
 /* dusk — cream to night through a real sunset ramp. Mixing cream with the
    gold token put an olive-brown in the middle, which is where the mud was. */
 .nightfall{
@@ -1130,8 +1185,12 @@ main > footer{ padding-block: var(--pad-block); }
    ═══════════════════════════════════════════════════════════ */
 
 @media (min-width:56rem){
-  .day__grid{ grid-template-columns:.85fr 1fr; gap:clamp(3rem,6vw,5rem); }
+  .day__grid{ grid-template-columns:.9fr 1fr; gap:clamp(3rem,6vw,5rem); }
   .day__grid--flip .day__figure{ order:2; }
+
+  /* label and value side by side, like a printed schedule */
+  .detail > div{ grid-template-columns:7.5rem 1fr; gap:1.5rem; align-items:baseline; }
+  .detail dt{ padding-top:.15rem; }
 
   .invite__parents{ grid-template-columns:1fr 1fr; gap:2rem; text-align:left; }
 

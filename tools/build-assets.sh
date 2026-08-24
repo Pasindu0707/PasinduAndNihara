@@ -39,7 +39,8 @@ done
 echo "  party-mood  ->  800,1300 (cropped top and bottom)"
 
 echo "== story cards (one per year) =="
-encode "$SRC/2018.jpg"          story-2018 00 "400,700,1200"
+encode "$SRC/ourfirstphoto.jpg" story-2018  00 "400,640"
+encode "$SRC/2018.jpg"          story-2018b 00 "400,700,1200"
 encode "$SRC/2019.jpg"          story-2019 00 "400,700,1200"
 encode "$SRC/2022.jpeg"         story-2022 00 "400,700"
 encode "$SRC/2023.jpeg"         story-2023 00 "400,700"

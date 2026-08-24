@@ -49,12 +49,17 @@ function applyGuest(){
   $('#rsvpFor').textContent      = name;
 
   if (guest && guest.table){
-    const dd = document.createElement('dd');
-    const dt = document.createElement('dt');
-    dt.textContent = 'Your table';
-    dd.textContent = guest.table;
     const detail = $('#day-two .detail');
-    if (detail){ detail.append(dt, dd); }
+    if (detail){
+      // the schedule rows are wrapped, so this one has to be too
+      const row = document.createElement('div');
+      const dt  = document.createElement('dt');
+      const dd  = document.createElement('dd');
+      dt.textContent = 'Your table';
+      dd.textContent = guest.table;
+      row.append(dt, dd);
+      detail.append(row);
+    }
   }
 }
 
