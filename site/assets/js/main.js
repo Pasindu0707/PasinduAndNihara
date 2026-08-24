@@ -201,7 +201,7 @@ function setupCountdown(){
     const left = target - Date.now();
     if (left <= 0){
       $('#countdownRow').innerHTML =
-        '<p class="year__closer" style="margin:0">Today is the day.</p>';
+        '<p class="beat__closer" style="margin:0">Today is the day.</p>';
       return;
     }
     const m = Math.floor(left / 60000);
@@ -212,6 +212,63 @@ function setupCountdown(){
 
   tick();
   setInterval(tick, 30000);
+}
+
+
+/* ───────── the story track ─────────
+   The spine fills as you descend the years and the ruler names the year you
+   are standing in — so 2020 and 2021, which have no photographs, are still
+   beats you pass through rather than gaps you scroll over. */
+
+function setupTrack(){
+  const track = $('#track');
+  const fill  = $('#trackFill');
+  const label = $('#rulerYear');
+  const ticks = $$('.ruler__tick');
+  if (!track || !fill) return;
+
+  /* the spine */
+  let queued = false;
+  const draw = () => {
+    queued = false;
+    const r  = track.getBoundingClientRect();
+    const mid = window.innerHeight * 0.55;
+    const p  = (mid - r.top) / r.height;
+    fill.style.transform = `scaleY(${Math.min(1, Math.max(0, p))})`;
+  };
+  const onScroll = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(draw);
+  };
+  addEventListener('scroll', onScroll, { passive: true });
+  addEventListener('resize', onScroll, { passive: true });
+  draw();
+
+  /* the ruler */
+  if (!('IntersectionObserver' in window) || !label) return;
+  const byYear = Object.fromEntries(ticks.map(t => [t.dataset.year, t]));
+
+  const setYear = year => {
+    if (label.textContent === year) return;
+    label.textContent = year;
+    let past = true;
+    ticks.forEach(t => {
+      t.classList.toggle('is-now', t.dataset.year === year);
+      t.classList.toggle('is-past', past && t.dataset.year !== year);
+      if (t.dataset.year === year) past = false;
+    });
+  };
+
+  const io = new IntersectionObserver(entries => {
+    // the beat closest to the top of the reading band wins
+    const live = entries.filter(e => e.isIntersecting)
+                        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+    if (live) setYear(live.target.dataset.year);
+  }, { rootMargin: '-25% 0px -55% 0px' });
+
+  $$('.beat').forEach(b => io.observe(b));
+  if (byYear['2016']) setYear('2016');
 }
 
 
@@ -359,9 +416,9 @@ function setupRsvp(){
       if (!body.ok) throw new Error(body.error || 'rejected');
 
       form.innerHTML = coming
-        ? `<p class="year__closer" style="text-align:center;margin:0">
+        ? `<p class="beat__closer" style="text-align:center;margin:0">
              Wonderful. We'll see you on the seventeenth.</p>`
-        : `<p class="year__closer" style="text-align:center;margin:0">
+        : `<p class="beat__closer" style="text-align:center;margin:0">
              We'll miss you — thank you for telling us.</p>`;
     }catch{
       status.innerHTML =
@@ -443,6 +500,7 @@ function devJump(){
   setupReveals();
   setupInviteLine();
   setupCountdown();
+  setupTrack();
   setupGallery();
   setupLightbox();
   setupCalendar();

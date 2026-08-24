@@ -133,87 +133,174 @@
       <h2 class="section-title">How we got here</h2>
     </header>
 
-    <ol class="years" id="years">
+    <div class="ruler" id="ruler" aria-hidden="true">
+      <span class="ruler__year" id="rulerYear">2016</span>
+      <ol class="ruler__ticks">
+      <li class="ruler__tick ruler__tick--empty" data-year="2016"><i>2016</i></li>
+      <li class="ruler__tick ruler__tick--empty" data-year="2017"><i>2017</i></li>
+      <li class="ruler__tick" data-year="2018"><i>2018</i></li>
+      <li class="ruler__tick" data-year="2019"><i>2019</i></li>
+      <li class="ruler__tick ruler__tick--empty" data-year="2020"><i>2020</i></li>
+      <li class="ruler__tick ruler__tick--empty" data-year="2021"><i>2021</i></li>
+      <li class="ruler__tick" data-year="2022"><i>2022</i></li>
+      <li class="ruler__tick" data-year="2023"><i>2023</i></li>
+      <li class="ruler__tick" data-year="2024"><i>2024</i></li>
+      <li class="ruler__tick" data-year="2025"><i>2025</i></li>
+      <li class="ruler__tick" data-year="2026"><i>2026</i></li>
+      <li class="ruler__tick ruler__tick--end" data-year="2027"><i>2027</i></li>
+      </ol>
+    </div>
 
-      <li class="year year--text reveal">
-        <p class="year__no">2016</p>
-        <p class="year__gap ">A few pews apart</p>
-        <p class="year__note">We met as children at Sunday school, in the church we're marrying in. On <b>29 October</b>, Pasindu finally asked.</p>
+    <ol class="track" id="track">
+      <span class="track__spine" aria-hidden="true">
+        <span class="track__fill" id="trackFill"></span>
+      </span>
+
+      <li class="beat beat--quiet reveal" data-year="2016">
+        <p class="beat__year">2016</p>
+        <div class="beat__body">
+          <p class="beat__gap">A few pews apart</p>
+          <p class="beat__note">We met as children at Sunday school, in the church we're marrying in. On <b>29 October</b>, Pasindu asked.</p>
+        </div>
       </li>
 
-      <li class="year year--text reveal">
-        <p class="year__no">2017</p>
-        <p class="year__gap year__gap--far">7,599 km apart</p>
-        <p class="year__note">In December her family moved to Italy. A walk across town became a call across an ocean.</p>
+      <li class="beat beat--quiet reveal" data-year="2017">
+        <p class="beat__year">2017</p>
+        <div class="beat__body">
+          <p class="beat__gap beat__gap--far">7,599 km apart</p>
+          <p class="beat__note">In December her family moved to Italy. A walk across town became a call across an ocean.</p>
+        </div>
       </li>
 
-      <li class="year reveal">
-        <img class="year__pic" src="assets/img/story-2018-400.webp" width="400" height="500"
-             loading="lazy" decoding="async" alt="Pasindu and Nihara in 2018">
-        <p class="year__no">2018</p>
-        <p class="year__gap ">0 km, for a while</p>
-        <p class="year__note">The first photograph we have of the two of us. Home for a season, making short weeks count.</p>
+      <li class="beat reveal" data-year="2018">
+        <p class="beat__year">2018</p>
+        <figure class="beat__pic">
+          <img src="assets/img/story-2018-400.webp"
+               srcset="assets/img/story-2018-400.webp 400w, assets/img/story-2018-700.webp 700w"
+               sizes="(min-width: 56rem) 22rem, 78vw"
+               width="400" height="500" loading="lazy" decoding="async"
+               alt="Pasindu and Nihara in 2018">
+        </figure>
+        <div class="beat__body">
+          <p class="beat__gap">0 km, for a while</p>
+          <p class="beat__note">The first photograph we have of the two of us. Home for a season, making short weeks count.</p>
+        </div>
       </li>
 
-      <li class="year reveal">
-        <img class="year__pic" src="assets/img/story-2019-400.webp" width="400" height="500"
-             loading="lazy" decoding="async" alt="Pasindu and Nihara in 2019">
-        <p class="year__no">2019</p>
-        <p class="year__gap ">0 km, for a while</p>
-        <p class="year__note">Another visit. Another airport. We stopped calling them goodbyes.</p>
+      <li class="beat reveal" data-year="2019">
+        <p class="beat__year">2019</p>
+        <figure class="beat__pic">
+          <img src="assets/img/story-2019-400.webp"
+               srcset="assets/img/story-2019-400.webp 400w, assets/img/story-2019-700.webp 700w"
+               sizes="(min-width: 56rem) 22rem, 78vw"
+               width="400" height="500" loading="lazy" decoding="async"
+               alt="Pasindu and Nihara in 2019">
+        </figure>
+        <div class="beat__body">
+          <p class="beat__gap">0 km, for a while</p>
+          <p class="beat__note">Another visit. Another airport. We stopped calling them goodbyes.</p>
+        </div>
       </li>
 
-      <li class="year year--text reveal">
-        <p class="year__no">2020 — 2021</p>
-        <p class="year__gap year__gap--far">Two years, no photographs</p>
-        <p class="year__note">Borders shut. Nothing between us but a screen and the time difference.</p>
+      <li class="beat beat--quiet reveal" data-year="2020">
+        <p class="beat__year">2020</p>
+        <div class="beat__body">
+          <p class="beat__gap beat__gap--far">No photographs from this year</p>
+          <p class="beat__note">Borders closed. A whole year of nothing but a screen and the time difference.</p>
+        </div>
       </li>
 
-      <li class="year reveal">
-        <img class="year__pic" src="assets/img/story-2022-400.webp" width="400" height="500"
-             loading="lazy" decoding="async" alt="Pasindu and Nihara in 2022">
-        <p class="year__no">2022</p>
-        <p class="year__gap year__gap--far">Still counting time zones</p>
-        <p class="year__note">Five years of it, and neither of us treated the distance as an ending.</p>
+      <li class="beat beat--quiet reveal" data-year="2021">
+        <p class="beat__year">2021</p>
+        <div class="beat__body">
+          <p class="beat__gap beat__gap--far">None from this one either</p>
+          <p class="beat__note">And another. We got very good at waiting.</p>
+        </div>
       </li>
 
-      <li class="year reveal">
-        <img class="year__pic" src="assets/img/story-2023-400.webp" width="400" height="500"
-             loading="lazy" decoding="async" alt="Pasindu and Nihara in 2023">
-        <p class="year__no">2023</p>
-        <p class="year__gap ">0 km</p>
-        <p class="year__note">January. Pasindu met her family properly. Very little felt uncertain after that.</p>
+      <li class="beat reveal" data-year="2022">
+        <p class="beat__year">2022</p>
+        <figure class="beat__pic">
+          <img src="assets/img/story-2022-400.webp"
+               srcset="assets/img/story-2022-400.webp 400w, assets/img/story-2022-700.webp 700w"
+               sizes="(min-width: 56rem) 22rem, 78vw"
+               width="400" height="500" loading="lazy" decoding="async"
+               alt="Pasindu and Nihara in 2022">
+        </figure>
+        <div class="beat__body">
+          <p class="beat__gap beat__gap--far">Still counting time zones</p>
+          <p class="beat__note">Five years of it, and neither of us treated the distance as an ending.</p>
+        </div>
       </li>
 
-      <li class="year reveal">
-        <img class="year__pic" src="assets/img/story-2024-400.webp" width="400" height="500"
-             loading="lazy" decoding="async" alt="Pasindu and Nihara in 2024">
-        <p class="year__no">2024</p>
-        <p class="year__gap ">0 km</p>
-        <p class="year__note">A year of dressing up and staying out late, in the same country for once.</p>
+      <li class="beat reveal" data-year="2023">
+        <p class="beat__year">2023</p>
+        <figure class="beat__pic">
+          <img src="assets/img/story-2023-400.webp"
+               srcset="assets/img/story-2023-400.webp 400w, assets/img/story-2023-700.webp 700w"
+               sizes="(min-width: 56rem) 22rem, 78vw"
+               width="400" height="500" loading="lazy" decoding="async"
+               alt="Pasindu and Nihara in 2023">
+        </figure>
+        <div class="beat__body">
+          <p class="beat__gap">0 km</p>
+          <p class="beat__note">January. Pasindu met her family properly. Very little felt uncertain after that.</p>
+        </div>
       </li>
 
-      <li class="year year--mark reveal">
-        <img class="year__pic" src="assets/img/story-2025-400.webp" width="400" height="500"
-             loading="lazy" decoding="async" alt="Pasindu and Nihara in 2025">
-        <p class="year__no">2025</p>
-        <p class="year__gap ">16 January</p>
-        <p class="year__note">He asked again — properly this time. She said yes, then got on another plane.</p>
+      <li class="beat reveal" data-year="2024">
+        <p class="beat__year">2024</p>
+        <figure class="beat__pic">
+          <img src="assets/img/story-2024-400.webp"
+               srcset="assets/img/story-2024-400.webp 400w, assets/img/story-2024-700.webp 700w"
+               sizes="(min-width: 56rem) 22rem, 78vw"
+               width="400" height="500" loading="lazy" decoding="async"
+               alt="Pasindu and Nihara in 2024">
+        </figure>
+        <div class="beat__body">
+          <p class="beat__gap">0 km</p>
+          <p class="beat__note">A year of dressing up and staying out late, in the same country for once.</p>
+        </div>
       </li>
 
-      <li class="year reveal">
-        <img class="year__pic" src="assets/img/story-2026-400.webp" width="400" height="500"
-             loading="lazy" decoding="async" alt="Pasindu and Nihara in 2026">
-        <p class="year__no">2026</p>
-        <p class="year__gap year__gap--far">The last year apart</p>
-        <p class="year__note">One more year of airports. The last one.</p>
+      <li class="beat beat--mark reveal" data-year="2025">
+        <p class="beat__year">2025</p>
+        <figure class="beat__pic">
+          <img src="assets/img/story-2025-400.webp"
+               srcset="assets/img/story-2025-400.webp 400w, assets/img/story-2025-700.webp 700w"
+               sizes="(min-width: 56rem) 22rem, 78vw"
+               width="400" height="500" loading="lazy" decoding="async"
+               alt="Pasindu and Nihara in 2025">
+        </figure>
+        <div class="beat__body">
+          <p class="beat__gap">16 January</p>
+          <p class="beat__note">He asked again — properly this time. She said yes, then got on another plane.</p>
+        </div>
       </li>
 
-      <li class="year year--final reveal">
-        <p class="year__no">16 January 2027</p>
-        <p class="year__gap year__gap--zero">0 km — for good</p>
-        <p class="year__closer">Two years to the day. The same church.
-           This time we don't leave separately.</p>
+      <li class="beat reveal" data-year="2026">
+        <p class="beat__year">2026</p>
+        <figure class="beat__pic">
+          <img src="assets/img/story-2026-400.webp"
+               srcset="assets/img/story-2026-400.webp 400w, assets/img/story-2026-700.webp 700w"
+               sizes="(min-width: 56rem) 22rem, 78vw"
+               width="400" height="500" loading="lazy" decoding="async"
+               alt="Pasindu and Nihara in 2026">
+        </figure>
+        <div class="beat__body">
+          <p class="beat__gap beat__gap--far">The last year apart</p>
+          <p class="beat__note">One more year of airports. The last one.</p>
+        </div>
+      </li>
+
+      <li class="beat beat--final reveal" data-year="2027">
+        <p class="beat__year">2027</p>
+        <div class="beat__body">
+          <p class="beat__gap beat__gap--zero">0 km — for good</p>
+          <p class="beat__closer">Two years to the day. The same church.
+             This time we don't leave separately.</p>
+          <p class="beat__note beat__note--final">16 January · St. Joseph's, Wennappuwa</p>
+        </div>
       </li>
 
     </ol>

@@ -489,79 +489,177 @@ main > footer{ padding-block: var(--pad-block); }
   padding-bottom: clamp(2.5rem,7vh,4rem) !important;
 }
 
-.years{
-  list-style:none; margin:0; padding:0;
-  display:grid;
-  grid-template-columns:repeat(2, minmax(0,1fr));
-  gap:clamp(1.1rem, 4vw, 2rem);
+/* ── the ruler: every year is visible before you reach it ── */
+
+.ruler{
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; gap:1rem;
+  padding:.85rem 0 .7rem;
+  margin-bottom:clamp(1.5rem,5vw,2.5rem);
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--cream) 32%, var(--lily)) 72%, transparent);
 }
 
-.year{ display:flex; flex-direction:column; min-width:0; }
-
-.year__pic{
-  width:100%; aspect-ratio:4/5; object-fit:cover;
-  border-radius:2px; margin-bottom:.85rem;
-  box-shadow:0 .6rem 1.6rem -.85rem color-mix(in srgb, var(--ink) 55%, transparent);
+/* a position indicator, not a second headline — the beat carries the year */
+.ruler__year{
+  font-family: var(--body); font-weight:400;
+  font-size:.6875rem; line-height:1;
+  letter-spacing:.22em;
+  font-variant-numeric:tabular-nums;
+  color: var(--wine);
+  min-width:5ch;
 }
 
-.year__no{
-  margin:0;
+.ruler__ticks{
+  flex:1; list-style:none; margin:0; padding:0;
+  display:flex; align-items:flex-end; gap:0;
+  height:1.25rem;
+}
+.ruler__tick{
+  position:relative;
+  flex:1; height:.4rem;
+  border-left:1px solid color-mix(in srgb, var(--sage) 40%, transparent);
+  transition:height .45s var(--ease), border-color .45s var(--ease);
+}
+.ruler__tick i{ display:none; }
+.ruler__tick--empty{ height:.22rem; border-left-style:dotted; }
+.ruler__tick--end{ height:.7rem; border-left-color: var(--wine); }
+.ruler__tick.is-now{
+  height:1.25rem;
+  border-left-color: var(--wine);
+  border-left-width:2px;
+}
+.ruler__tick.is-past{ border-left-color: color-mix(in srgb, var(--wine) 45%, transparent); }
+
+/* ── the track ── */
+
+.track{
+  position:relative;
+  list-style:none; margin:0;
+  padding:0 0 0 clamp(2.5rem, 9vw, 4.5rem);
+}
+
+.track__spine{
+  position:absolute; left:.45rem; top:.4rem; bottom:3rem;
+  width:1px;
+  background: color-mix(in srgb, var(--sage) 28%, transparent);
+}
+.track__fill{
+  position:absolute; inset:0 auto 0 -1px;
+  width:3px;
+  background:linear-gradient(180deg, var(--sage), var(--wine));
+  transform-origin:top; transform:scaleY(0);
+  border-radius:2px;
+}
+
+.beat{
+  position:relative;
+  padding-bottom:clamp(3rem, 9vw, 5rem);
+}
+.beat::before{
+  content:""; position:absolute;
+  left:calc(clamp(2.5rem, 9vw, 4.5rem) * -1 + .45rem - 3px);
+  top:.55rem;
+  width:7px; height:7px; border-radius:50%;
+  background: var(--sage);
+}
+.beat--quiet::before{
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sage) 55%, transparent);
+}
+.beat--mark::before{ background: var(--wine); }
+.beat--final::before{
+  width:13px; height:13px;
+  left:calc(clamp(2.5rem, 9vw, 4.5rem) * -1 + .45rem - 6px);
+  top:.35rem;
+  background: var(--wine);
+  box-shadow:0 0 0 5px color-mix(in srgb, var(--wine) 12%, transparent);
+}
+
+.beat__year{
+  margin:0 0 .6rem;
   font-family: var(--display); font-weight:300;
-  font-size:clamp(1.05rem, 4.4vw, 1.4rem);
-  line-height:1.15; letter-spacing:-.01em;
+  font-size:clamp(1.35rem, 5.5vw, 1.9rem);
+  line-height:1; letter-spacing:-.015em;
+  font-variant-numeric:tabular-nums;
+}
+.beat--quiet .beat__year{ color: color-mix(in srgb, var(--ink) 45%, transparent); }
+.beat--mark  .beat__year{ color: var(--wine); }
+
+.beat__pic{ margin:0 0 1rem; }
+.beat__pic img{
+  width:100%; max-width:22rem;
+  aspect-ratio:4/5; object-fit:cover;
+  border-radius:2px;
+  box-shadow:0 .8rem 2rem -1rem color-mix(in srgb, var(--ink) 55%, transparent);
 }
 
-.year__gap{
-  margin:.4rem 0 0;
-  font-size:.5625rem; letter-spacing:.18em; text-transform:uppercase;
-  line-height:1.5;
+.beat__gap{
+  margin:0;
+  font-size:.5625rem; letter-spacing:.2em; text-transform:uppercase;
   color: var(--sage);
 }
-.year__gap--far{ color: var(--wine); }
-.year__gap--zero{
+.beat__gap--far{ color: var(--wine); }
+.beat__gap--zero{
   display:inline-block;
-  padding:.35rem .8rem; border-radius:2rem;
+  padding:.4rem .85rem; border-radius:2rem;
   background: var(--sage); color: var(--lily);
   letter-spacing:.22em;
 }
 
-.year__note{
-  margin:.65rem 0 0;
-  font-size:.8125rem; line-height:1.65;
+.beat__note{
+  margin:.55rem 0 0; max-width:34rem;
+  font-size:.9375rem; line-height:1.7;
   color: var(--muted);
 }
-.year__note b{ font-weight:400; color: var(--wine); }
+.beat__note b{ font-weight:400; color: var(--wine); }
+.beat__note--final{ margin-top:1rem; font-size:.75rem; letter-spacing:.1em; }
 
-/* the year with no photograph — 2017, when she left */
-.year--text{
-  justify-content:center;
-  padding:clamp(1.1rem,4vw,1.6rem);
-  background: color-mix(in srgb, var(--sage) 9%, transparent);
-  border:1px solid var(--rule);
-  border-radius:2px;
+.beat--quiet .beat__note{ font-style:italic; }
+
+.beat--final{
+  padding:clamp(1.75rem,6vw,2.5rem) clamp(1.25rem,4vw,2rem) 0;
+  margin-top:.5rem;
+  border-top:1px solid color-mix(in srgb, var(--wine) 20%, transparent);
 }
-
-/* the engagement */
-.year--mark .year__no{ color: var(--wine); }
-
-/* the wedding — full width, the end of the meter */
-.year--final{
-  grid-column:1 / -1;
-  align-items:center; text-align:center;
-  padding:clamp(1.9rem,7vw,3rem) clamp(1.1rem,4vw,2rem);
-  background: color-mix(in srgb, var(--wine) 5%, transparent);
-  border:1px solid color-mix(in srgb, var(--wine) 22%, transparent);
-  border-radius:2px;
-}
-.year--final .year__no{ font-size:clamp(1.25rem,5.5vw,2rem); }
-.year--final .year__gap{ margin-top:.7rem; }
-
-.year__closer{
-  margin:1.1rem auto 0; max-width:30rem;
+.beat__closer{
+  margin:1rem 0 0; max-width:30rem;
   font-family: var(--display); font-weight:250;
-  font-size:clamp(1.05rem,4.4vw,1.6rem);
-  line-height:1.5; letter-spacing:-.01em;
+  font-size:clamp(1.15rem,4.8vw,1.75rem);
+  line-height:1.45; letter-spacing:-.01em;
   color: var(--text);
+}
+
+@media (min-width:56rem){
+  .ruler{ gap:1.5rem; padding-bottom:1.4rem; }
+  .ruler__ticks{ height:1.75rem; }
+  .ruler__tick{ height:.55rem; }
+  .ruler__tick.is-now{ height:1.75rem; }
+
+  /* wide screens have room to name every year on the ruler */
+  .ruler__tick i{
+    display:block; position:absolute;
+    top:calc(100% + .35rem); left:0;
+    font-family: var(--body); font-style:normal;
+    font-size:.5625rem; letter-spacing:.12em;
+    color: color-mix(in srgb, var(--ink) 38%, transparent);
+    transition:color .45s var(--ease);
+  }
+  .ruler__tick.is-now i{ color: var(--wine); }
+  .ruler__tick.is-past i{ color: color-mix(in srgb, var(--wine) 55%, transparent); }
+
+  .beat{
+    display:grid;
+    grid-template-columns:22rem 1fr;
+    grid-template-areas:"year year" "pic body";
+    column-gap:clamp(2rem,4vw,3.5rem);
+  }
+  .beat__year{ grid-area:year; }
+  .beat__pic { grid-area:pic; margin-bottom:0; }
+  .beat__body{ grid-area:body; align-self:center; }
+  .beat--quiet,
+  .beat--final{ display:block; }
+  .beat--quiet .beat__note{ max-width:38rem; }
 }
 
 
@@ -633,7 +731,7 @@ main > footer{ padding-block: var(--pad-block); }
   background: var(--paper);
   color: var(--text);
 }
-[data-act="night"] .year__gap--zero{ color: var(--night); }
+[data-act="night"] .beat__gap--zero{ color: var(--night); }
 
 
 /* ═══════════════════════════════════════════════════════════
@@ -877,7 +975,6 @@ main > footer{ padding-block: var(--pad-block); }
 
   .invite__parents{ grid-template-columns:1fr 1fr; gap:2.5rem; text-align:left; }
 
-  .years,
   .shots{ grid-template-columns:repeat(3, minmax(0,1fr)); }
 
   .rsvp__form{ gap:2rem; }
