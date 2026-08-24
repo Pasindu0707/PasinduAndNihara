@@ -31,7 +31,7 @@ encode() {
 
 echo "== act photos =="
 encode "$SRC/engagement1.jpg"  church-mood 08 "640,1000,1400"
-encode "$SRC/2024.jpeg"        party-mood  00 "800,1300"
+encode "$SRC/2024.jpeg"        party-mood  07 "800,1300"
 
 echo "== story cards (one per year) =="
 encode "$SRC/ourfirstphoto.jpg" story-2016 00 "400,640"
@@ -39,7 +39,7 @@ encode "$SRC/2018.jpg"          story-2018 00 "400,700,1200"
 encode "$SRC/2019.jpg"          story-2019 00 "400,700,1200"
 encode "$SRC/2022.jpeg"         story-2022 00 "400,700"
 encode "$SRC/2023.jpeg"         story-2023 00 "400,700"
-encode "$SRC/2024.jpeg"         story-2024 00 "400,700,1066"
+encode "$SRC/2024.jpeg"         story-2024 07 "400,700,1066"
 encode "$SRC/2025.jpeg"         story-2025 00 "400,700,1200"
 encode "$SRC/2026.jpeg"         story-2026 00 "400,700,1200"
 
