@@ -396,7 +396,7 @@ main > footer{ padding-block: var(--pad-block); }
 /* stationery: an ivory card with a hairline rule set inside the edge */
 .card{
   position:relative;
-  padding: clamp(2.4rem,9vw,3.75rem) clamp(1.5rem,6vw,3rem);
+  padding: clamp(1.9rem,6.5vw,2.6rem) clamp(1.4rem,5vw,2.4rem);
   background: linear-gradient(168deg,
     var(--lily),
     color-mix(in srgb, var(--cream) 38%, var(--lily)));
@@ -427,9 +427,9 @@ main > footer{ padding-block: var(--pad-block); }
 
 .invite__line{
   position:relative;
-  margin:clamp(1.5rem,5vw,2.25rem) auto clamp(1rem,3vw,1.5rem);
+  margin:clamp(1rem,3.5vw,1.5rem) auto clamp(.6rem,2vw,1rem);
   max-width:32rem;
-  min-height:clamp(3.5rem,13vw,5rem);
+  min-height:clamp(3rem,11vw,4rem);
   display:grid;
   align-content:end;
   justify-items:center;
@@ -465,10 +465,10 @@ main > footer{ padding-block: var(--pad-block); }
 .invite__line.is-written .invite__rule line{ stroke-dashoffset:0; }
 
 .invite__parents{
-  margin-top:clamp(3rem,9vw,5rem);
-  padding-top:clamp(2rem,6vw,3rem);
+  margin-top:clamp(1.6rem,4.5vw,2.25rem);
+  padding-top:clamp(1.25rem,3.5vw,1.75rem);
   border-top:1px solid color-mix(in srgb, var(--gilt) 45%, transparent);
-  display:grid; gap:1.75rem;
+  display:grid; gap:1.25rem;
   font-size:.9375rem;
 }
 .invite__parents p{ margin:0; }
@@ -510,9 +510,11 @@ main > footer{ padding-block: var(--pad-block); }
    ═══════════════════════════════════════════════════════════ */
 
 .story{
-  background: color-mix(in srgb, var(--cream) 32%, var(--lily));
-  padding-bottom: clamp(2.5rem,7vh,4rem) !important;
+  --field: color-mix(in srgb, var(--cream) 18%, var(--lily));
+  background: var(--field);
+  padding-block: clamp(2.5rem,7vh,4rem) !important;
 }
+.story .section-head{ margin-bottom:clamp(1.5rem,4vw,2.25rem); }
 
 /* ── the ruler: every year is visible before you reach it ── */
 
@@ -521,9 +523,7 @@ main > footer{ padding-block: var(--pad-block); }
   display:flex; align-items:center; gap:1rem;
   padding:.85rem 0 .7rem;
   margin-bottom:clamp(1.5rem,5vw,2.5rem);
-  background:linear-gradient(180deg,
-    color-mix(in srgb, var(--cream) 34%, var(--lily)) 58%,
-    transparent);
+  background:linear-gradient(180deg, var(--field) 58%, transparent);
   -webkit-backdrop-filter:blur(9px);
   backdrop-filter:blur(9px);
   mask-image:linear-gradient(180deg, #000 62%, transparent);
@@ -547,7 +547,7 @@ main > footer{ padding-block: var(--pad-block); }
 .ruler__tick{
   position:relative;
   flex:1; height:.4rem;
-  border-left:1px solid color-mix(in srgb, var(--sage) 40%, transparent);
+  border-left:1px solid color-mix(in srgb, var(--sage) 55%, transparent);
   transition:height .45s var(--ease), border-color .45s var(--ease);
 }
 .ruler__tick i{ display:none; }
@@ -583,7 +583,7 @@ main > footer{ padding-block: var(--pad-block); }
 
 .beat{
   position:relative;
-  padding-bottom:clamp(3rem, 9vw, 5rem);
+  padding-bottom:clamp(2.25rem, 6.5vw, 3.5rem);
 }
 .beat::before{
   content:""; position:absolute;
@@ -612,12 +612,12 @@ main > footer{ padding-block: var(--pad-block); }
   line-height:1; letter-spacing:-.015em;
   font-variant-numeric:tabular-nums;
 }
-.beat--quiet .beat__year{ color: color-mix(in srgb, var(--ink) 62%, transparent); }
+.beat--quiet .beat__year{ color: color-mix(in srgb, var(--ink) 72%, transparent); }
 .beat--mark  .beat__year{ color: var(--wine); }
 
 .beat__pic{ margin:0 0 1rem; }
 .beat__pic img{
-  width:100%; max-width:22rem;
+  width:100%; max-width:20rem;
   aspect-ratio:4/5; object-fit:cover;
   border-radius:2px;
   box-shadow:0 .8rem 2rem -1rem color-mix(in srgb, var(--ink) 55%, transparent);
@@ -639,12 +639,15 @@ main > footer{ padding-block: var(--pad-block); }
 .beat__note{
   margin:.55rem 0 0; max-width:34rem;
   font-size:.9375rem; line-height:1.7;
-  color: var(--muted);
+  color: color-mix(in srgb, var(--ink) 92%, transparent);
 }
 .beat__note b{ font-weight:400; color: var(--wine); }
-.beat__note--final{ margin-top:1rem; font-size:.75rem; letter-spacing:.1em; }
+.beat__note--final{
+  margin-top:1.1rem; font-size:.6875rem; letter-spacing:.16em;
+  text-transform:uppercase; color: var(--accent);
+}
 
-.beat--quiet .beat__note{ font-style:italic; }
+.beat--quiet .beat__note{ font-style:italic; color: color-mix(in srgb, var(--ink) 82%, transparent); }
 
 .beat--final{
   padding:clamp(1.75rem,6vw,2.5rem) clamp(1.25rem,4vw,2rem) 0;
@@ -671,24 +674,29 @@ main > footer{ padding-block: var(--pad-block); }
     top:calc(100% + .35rem); left:0;
     font-family: var(--body); font-style:normal;
     font-size:.5625rem; letter-spacing:.12em;
-    color: color-mix(in srgb, var(--ink) 38%, transparent);
+    color: color-mix(in srgb, var(--ink) 55%, transparent);
     transition:color .45s var(--ease);
   }
   .ruler__tick.is-now i{ color: var(--wine); }
   .ruler__tick.is-past i{ color: color-mix(in srgb, var(--wine) 55%, transparent); }
 
+  /* year in its own gutter, photograph beside it, words to the right —
+     the row stops being two thirds empty */
   .beat{
     display:grid;
-    grid-template-columns:22rem 1fr;
-    grid-template-areas:"year year" "pic body";
-    column-gap:clamp(2rem,4vw,3.5rem);
+    grid-template-columns:6.5rem 17rem 1fr;
+    grid-template-areas:"year pic body";
+    column-gap:clamp(1.5rem,3vw,2.5rem);
   }
-  .beat__year{ grid-area:year; }
+  .beat__year{ grid-area:year; text-align:right; margin:.35rem 0 0; }
   .beat__pic { grid-area:pic; margin-bottom:0; }
-  .beat__body{ grid-area:body; align-self:center; }
-  .beat--quiet,
+  .beat__pic img{ max-width:17rem; }
+  .beat__body{ grid-area:body; align-self:start; padding-top:.3rem; }
+
+  .beat--quiet{ grid-template-areas:"year body body"; }
+  .beat--quiet .beat__note{ max-width:40rem; }
+
   .beat--final{ display:block; }
-  .beat--quiet .beat__note{ max-width:38rem; }
 }
 
 
@@ -1002,7 +1010,7 @@ main > footer{ padding-block: var(--pad-block); }
   .day__grid{ grid-template-columns:.85fr 1fr; gap:clamp(3rem,6vw,5rem); }
   .day__grid--flip .day__figure{ order:2; }
 
-  .invite__parents{ grid-template-columns:1fr 1fr; gap:2.5rem; text-align:left; }
+  .invite__parents{ grid-template-columns:1fr 1fr; gap:2rem; text-align:left; }
 
   .shots{ grid-template-columns:repeat(3, minmax(0,1fr)); }
 
@@ -1093,10 +1101,9 @@ main > footer::after{
 .story::before{
   background:
     linear-gradient(180deg, color-mix(in srgb, var(--cream) 52%, var(--lily)), transparent 16%),
-    linear-gradient(100deg,
-      color-mix(in srgb, var(--sage) 13%, transparent) 0%,
-      transparent 42%),
-    radial-gradient(46% 30% at 96% 4%, color-mix(in srgb, var(--gilt) 30%, transparent), transparent 70%);
+    radial-gradient(52% 34% at 0% 8%,   color-mix(in srgb, var(--sage) 20%, transparent), transparent 72%),
+    radial-gradient(46% 34% at 100% 46%, color-mix(in srgb, var(--gilt) 26%, transparent), transparent 72%),
+    radial-gradient(60% 30% at 50% 100%, color-mix(in srgb, var(--sage) 14%, transparent), transparent 74%);
 }
 
 .day--church::before{
