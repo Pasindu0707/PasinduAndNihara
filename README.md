@@ -11,10 +11,11 @@ site/                 everything that gets published
   assets/css/style.css
   assets/js/main.js   config lives at the top of this file
   assets/img/*.webp   built from img/ — do not edit by hand
-  assets/video/       hero clip (mp4 + webm + poster)
+  assets/video/       hero-sm.mp4 (phones), hero-lg.mp4 (desktop), poster
   assets/cal/*.ics    add-to-calendar files
   data/guests.json    generated — names only, never phone numbers
 tools/
+  apps-script.gs      the Google Apps Script — paste into the sheet
   build-assets.sh     originals in img/  →  site/assets
   build-guests.mjs    Google Sheet       →  guests.json + links.html
   shot.mjs            screenshots via Chrome DevTools Protocol
@@ -62,6 +63,18 @@ line, the RSVP form, and their table number. Anyone opening the bare URL gets
 
 `guests.json` is public, so it deliberately carries **no phone numbers**. Those stay
 in the sheet and in `tools/links.html`, neither of which is deployed.
+
+## Knowing who has opened their invitation
+
+The first time a guest opens their own link on a given day, the page sends one
+line to the sheet's `OPENS` tab: timestamp, guest id, name. Nothing else — no
+page views, no scroll depth, no device details. It is sent with `sendBeacon`
+and failures are swallowed, so it can never delay or break the page.
+
+In the spreadsheet, **Wedding → Who hasn't opened it** builds a `NOT OPENED`
+tab listing every guest with no open on record. That menu comes from
+`tools/apps-script.gs`, which also handles RSVP posts — paste it over the
+script in the sheet and redeploy.
 
 ## Known limitation — the RSVP endpoint
 

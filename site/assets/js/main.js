@@ -57,6 +57,41 @@ function applyGuest(){
 }
 
 
+/* ───────── "this link was opened" ─────────
+   One line to the OPENS tab the first time a guest opens their own link on a
+   given day. Nothing else is recorded — no page views, no scroll, no device.
+   It exists so that in late December you can see who has never looked. */
+
+function logOpen(){
+  if (!guest) return;                       // no personal link, nothing to log
+  if (!CONFIG.rsvpEndpoint) return;
+
+  const today = new Date().toISOString().slice(0, 10);
+  const stamp = `${guest.id}|${today}`;
+  try{
+    if (localStorage.getItem('pn-open') === stamp) return;
+    localStorage.setItem('pn-open', stamp);
+  }catch{ /* private mode — ping anyway, the sheet dedupes by day */ }
+
+  const body = JSON.stringify({
+    type: 'open',
+    guestId: guest.id,
+    displayName: guest.name
+  });
+
+  // text/plain keeps this a simple request, so no CORS preflight
+  const blob = new Blob([body], { type: 'text/plain;charset=UTF-8' });
+  if (navigator.sendBeacon?.(CONFIG.rsvpEndpoint, blob)) return;
+
+  fetch(CONFIG.rsvpEndpoint, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body,
+    keepalive: true
+  }).catch(() => { /* never let this get in the guest's way */ });
+}
+
+
 /* ───────── the envelope ───────── */
 
 function openEnvelope(){
@@ -103,9 +138,16 @@ function setupEnvelope(){
 function playHeroVideo(){
   const v = $('#heroVideo');
   if (!v || reducedMotion) return;
+
+  // The clip is a 576px-wide phone export. A laptop stretches that across the
+  // whole window, so wide screens get the 2x pass; phones keep the small file
+  // rather than pulling 4 MB over mobile data.
+  const wide = window.matchMedia('(min-width: 900px)').matches;
+  v.src = wide ? 'assets/video/hero-lg.mp4' : 'assets/video/hero-sm.mp4';
+
   v.preload = 'auto';
   v.load();
-  v.play().catch(() => { /* autoplay refused — poster stands in */ });
+  v.play().catch(() => { /* autoplay refused — the poster stands in */ });
 }
 
 
@@ -395,6 +437,7 @@ function devJump(){
 (async function init(){
   guest = await loadGuest();
   applyGuest();
+  logOpen();
 
   setupEnvelope();
   setupReveals();

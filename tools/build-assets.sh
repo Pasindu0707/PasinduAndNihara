@@ -31,15 +31,14 @@ encode() {
 
 echo "== act photos =="
 encode "$SRC/engagement1.jpg"  church-mood 08 "640,1000,1400"
-encode "$SRC/2024.jpeg"        party-mood  07 "800,1300"
+encode "$SRC/2024.jpeg"        party-mood  12 "800,1300"
 
 echo "== story cards (one per year) =="
-encode "$SRC/ourfirstphoto.jpg" story-2016 00 "400,640"
 encode "$SRC/2018.jpg"          story-2018 00 "400,700,1200"
 encode "$SRC/2019.jpg"          story-2019 00 "400,700,1200"
 encode "$SRC/2022.jpeg"         story-2022 00 "400,700"
 encode "$SRC/2023.jpeg"         story-2023 00 "400,700"
-encode "$SRC/2024.jpeg"         story-2024 07 "400,700,1066"
+encode "$SRC/2024.jpeg"         story-2024 12 "400,700,1066"
 encode "$SRC/2025.jpeg"         story-2025 00 "400,700,1200"
 encode "$SRC/2026.jpeg"         story-2026 00 "400,700,1200"
 
@@ -59,14 +58,24 @@ ffmpeg -v error -i "$SRC/engagement3.jpg" \
 echo "  share-card.jpg"
 
 echo "== hero video =="
+# The source is a 576x1024 WhatsApp export, so there is no real detail to
+# recover. What helps: strip the compression noise, upscale 2x with lanczos
+# and a light sharpen, and spend far more bits than before. A laptop then
+# upscales ~1.1x instead of ~2.2x, which is where the mush was coming from.
 HERO="$SRC/video/herovid.mp4"
+CLEAN="hqdn3d=2:1.5:3:3"
+SHARP="unsharp=5:5:0.45:5:5:0.0"
 if [ -f "$HERO" ]; then
-  ffmpeg -v error -i "$HERO" -an -ss 0 -t 24 \
-    -vf "scale=576:-2" -c:v libx264 -profile:v main -pix_fmt yuv420p \
-    -crf 31 -preset slow -movflags +faststart -y "$VID/hero.mp4"
-  ffmpeg -v error -ss 8 -i "$HERO" -frames:v 1 \
-    -vf "scale=576:-2" -q:v 75 -y "$VID/hero-poster.webp"
-  echo "  hero.mp4 / hero-poster.webp"
+  # phones and small windows — native resolution, generous quality
+  ffmpeg -v error -i "$HERO" -an -t 24     -vf "hqdn3d=1.5:1:2:2"     -c:v libx264 -profile:v high -pix_fmt yuv420p     -crf 22 -preset slow -movflags +faststart -y "$VID/hero-sm.mp4"
+
+  # laptops and desktops — 2x
+  ffmpeg -v error -i "$HERO" -an -t 24     -vf "${CLEAN},scale=1152:2048:flags=lanczos,${SHARP}"     -c:v libx264 -profile:v high -pix_fmt yuv420p     -crf 24 -preset slow -movflags +faststart -y "$VID/hero-lg.mp4"
+
+  ffmpeg -v error -ss 8 -i "$HERO" -frames:v 1     -vf "${CLEAN},scale=1152:2048:flags=lanczos,${SHARP}"     -q:v 80 -y "$VID/hero-poster.webp"
+
+  rm -f "$VID/hero.mp4"
+  echo "  hero-sm.mp4 / hero-lg.mp4 / hero-poster.webp"
 else
   echo "  MISSING $HERO"
 fi

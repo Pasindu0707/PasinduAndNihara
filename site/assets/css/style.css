@@ -317,6 +317,9 @@ main > footer{ padding-block: var(--pad-block); }
   padding: 6rem var(--gutter);
   text-align:center;
   color: var(--lily);
+  /* the clip runs from a bright window to deep shade — a soft shadow keeps
+     every line legible on every frame without darkening the picture */
+  text-shadow:0 1px 26px rgba(0,0,0,.5), 0 1px 3px rgba(0,0,0,.3);
 }
 
 .hero__verse{
