@@ -7,7 +7,7 @@ const CONFIG = {
   rsvpEndpoint: 'https://script.google.com/macros/s/AKfycbwJV6_u8w6rKijYoRoR7ZnozPnyj8zPAZiHqbSl5vygm-Fc6Hn7TNCBfoRXiqzwDZMVIQ/exec',
   ceremony: '2027-01-16T09:30:00+05:30',
   fallbackName: 'you and your family',
-  galleryCount: 10,
+  galleryCount: 7,
   // set to 'assets/audio/theme.mp3' once a track has been chosen
   music: null
 };
@@ -159,7 +159,7 @@ function setupCountdown(){
     const left = target - Date.now();
     if (left <= 0){
       $('#countdownRow').innerHTML =
-        '<p class="chapter__closer" style="margin:0">Today is the day.</p>';
+        '<p class="year__closer" style="margin:0">Today is the day.</p>';
       return;
     }
     const m = Math.floor(left / 60000);
@@ -173,25 +173,71 @@ function setupCountdown(){
 }
 
 
-/* ───────── gallery ───────── */
+/* ───────── gallery + lightbox ───────── */
 
 function setupGallery(){
-  const rail = $('#galleryRail');
-  if (!rail) return;
+  const grid = $('#shots');
+  if (!grid) return;
 
   const frag = document.createDocumentFragment();
   for (let i = 1; i <= CONFIG.galleryCount; i++){
-    const n = String(i).padStart(2, '0');
-    const img = new Image();
-    img.src = `assets/img/gal-${n}-500.webp`;
+    const n     = String(i).padStart(2, '0');
+    const small = `assets/img/gal-${n}-400.webp`;
+    const large = `assets/img/gal-${n}-full.webp`;
+
+    const img = new Image(400, 500);
+    img.src = small;
     img.loading = 'lazy';
     img.decoding = 'async';
-    img.alt = 'Pasindu and Nihara over the years';
-    img.width = 500; img.height = 700;
-    img.onerror = () => img.remove();
-    frag.append(img);
+    img.alt = `Pasindu and Nihara — engagement photograph ${i}`;
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.setAttribute('aria-label', 'View this photograph larger');
+    btn.dataset.full = large;
+    btn.append(img);
+
+    const li = document.createElement('li');
+    li.className = 'reveal is-in';
+    li.append(btn);
+
+    // a missing size just drops out rather than showing a broken frame
+    img.onerror = () => li.remove();
+    frag.append(li);
   }
-  rail.append(frag);
+  grid.append(frag);
+}
+
+function setupLightbox(){
+  const box   = $('#lightbox');
+  const img   = $('#lightboxImg');
+  const close = $('#lightboxClose');
+  if (!box) return;
+
+  let lastFocus = null;
+
+  const open = src => {
+    lastFocus = document.activeElement;
+    img.src = src;
+    box.hidden = false;
+    document.body.style.overflow = 'hidden';
+    close.focus();
+  };
+  const shut = () => {
+    box.hidden = true;
+    img.removeAttribute('src');
+    document.body.style.overflow = '';
+    lastFocus?.focus();
+  };
+
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.shots button');
+    if (btn) open(btn.dataset.full);
+  });
+  box.addEventListener('click', shut);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && !box.hidden) shut();
+  });
 }
 
 
@@ -271,9 +317,9 @@ function setupRsvp(){
       if (!body.ok) throw new Error(body.error || 'rejected');
 
       form.innerHTML = coming
-        ? `<p class="chapter__closer" style="text-align:center;margin:0">
+        ? `<p class="year__closer" style="text-align:center;margin:0">
              Wonderful. We'll see you on the seventeenth.</p>`
-        : `<p class="chapter__closer" style="text-align:center;margin:0">
+        : `<p class="year__closer" style="text-align:center;margin:0">
              We'll miss you — thank you for telling us.</p>`;
     }catch{
       status.innerHTML =
@@ -355,6 +401,7 @@ function devJump(){
   setupInviteLine();
   setupCountdown();
   setupGallery();
+  setupLightbox();
   setupCalendar();
   setupRsvp();
   setupMusic();
