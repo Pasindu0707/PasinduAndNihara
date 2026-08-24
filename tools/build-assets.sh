@@ -67,6 +67,50 @@ ffmpeg -v error -i "$SRC/engagement3.jpg" \
   -q:v 82 -y "$OUT/share-card.jpg"
 echo "  share-card.jpg"
 
+echo "== icons =="
+# Generated here on purpose: this script wipes site/assets/img, so anything
+# hand-placed in it disappears on the next rebuild. That is how the favicon
+# was lost once already.
+#
+# At 16px a line drawing turns to mush, so the icon is the wax seal instead:
+# a solid wine field with the lily in cream, drawn with heavy strokes.
+cat > "$OUT/favicon.svg" <<'SVG'
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="10" fill="#590B19"/>
+  <g fill="none" stroke="#F5EBD0" stroke-width="4.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M32 36C22 33 18.5 22.5 24.5 14 29 7.5 39.5 6 44 11c4.4 4.8 3 14.2-5.2 19.4-2.1 1.5-4.5 3.7-6.8 5.6Z"/>
+    <path d="M32.9 31c-1.5-4.8-.9-10.7 1.2-14.5"/>
+    <path d="M32 36v20"/>
+  </g>
+</svg>
+SVG
+
+CHROME="/c/Program Files/Google/Chrome/Application/chrome.exe"
+if [ -f "$CHROME" ]; then
+  TMP="$(mktemp -d)"
+  # Chrome clamps very small window widths, so a 180px window does not give a
+  # 180px viewport — the icon ends up centred outside the capture. Render it
+  # big at a fixed size in the top-left corner instead, then crop and scale.
+  # wine behind it, so the PNGs are full-bleed — iOS rounds the home-screen
+  # icon itself and a white corner would show through
+  { echo '<style>html,body{margin:0;padding:0;overflow:hidden;background:#590B19}svg{width:512px;height:512px;display:block}</style>'
+    cat "$OUT/favicon.svg"
+  } > "$TMP/icon.html"
+
+  "$CHROME" --headless=new --disable-gpu --hide-scrollbars     --force-device-scale-factor=1 --window-size=700,700     --screenshot="$(cygpath -w "$TMP/icon.png")"     "file:///$(cygpath -m "$TMP/icon.html")" >/dev/null 2>&1
+
+  if [ -f "$TMP/icon.png" ]; then
+    ffmpeg -v error -i "$TMP/icon.png" -vf "crop=512:512:0:0,scale=180:180:flags=lanczos"       -y "$OUT/apple-touch-icon.png"
+    ffmpeg -v error -i "$TMP/icon.png" -vf "crop=512:512:0:0,scale=32:32:flags=lanczos"       -y "$OUT/favicon-32.png"
+    echo "  favicon.svg / favicon-32.png / apple-touch-icon.png"
+  else
+    echo "  favicon.svg (Chrome did not render — PNG fallbacks missing)"
+  fi
+  rm -rf "$TMP"
+else
+  echo "  favicon.svg (no Chrome — PNG fallbacks not rasterised)"
+fi
+
 echo "== hero video =="
 # The source is a 576x1024 WhatsApp export, so there is no real detail to
 # recover. What helps: strip the compression noise, upscale 2x with lanczos
@@ -93,3 +137,27 @@ fi
 echo
 du -sh "$OUT" "$VID"
 ls -la "$VID"
+
+echo
+echo "== checking every asset the page asks for =="
+# This script deletes and recreates site/assets/img. The favicon was once
+# hand-placed there and vanished on a rebuild without anything noticing,
+# so the build now refuses to pass quietly.
+missing=0
+for f in $(grep -oE '(assets|data)/[A-Za-z0-9_./-]+\.(webp|jpg|png|svg|mp4|ics|json|css|js)' site/index.html | sort -u); do
+  if [ ! -f "site/$f" ]; then echo "  MISSING  site/$f"; missing=$((missing+1)); fi
+done
+for i in 1 2 3 4 5 6 7; do
+  n=$(printf "%02d" "$i")
+  for v in 400 full; do
+    [ -f "site/assets/img/gal-$n-$v.webp" ] || { echo "  MISSING  gal-$n-$v.webp"; missing=$((missing+1)); }
+  done
+done
+for f in video/hero-sm.mp4 video/hero-lg.mp4 video/hero-poster.webp cal/ceremony.ics cal/celebration.ics; do
+  [ -f "site/assets/$f" ] || { echo "  MISSING  assets/$f"; missing=$((missing+1)); }
+done
+if [ "$missing" -gt 0 ]; then
+  echo "  $missing asset(s) missing — the site will 404"
+  exit 1
+fi
+echo "  all present"
