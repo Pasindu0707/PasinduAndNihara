@@ -18,7 +18,7 @@
   --text:   var(--ink);
   --muted:  color-mix(in srgb, var(--ink) 74%, transparent);
   --rule:   color-mix(in srgb, var(--sage) 30%, transparent);
-  --accent: var(--sage);
+  --accent: color-mix(in srgb, var(--sage) 88%, var(--ink));
 
   /* type */
   --display: "Fraunces", "Hoefler Text", Garamond, serif;
@@ -388,7 +388,32 @@ main > footer{ padding-block: var(--pad-block); }
    THE INVITATION LINE  — the signature moment
    ═══════════════════════════════════════════════════════════ */
 
+.invite,
+.countdown{ background: color-mix(in srgb, var(--cream) 52%, var(--lily)); }
+
 .invite{ text-align:center; padding-bottom: clamp(2rem,6vh,3.5rem) !important; }
+
+/* stationery: an ivory card with a hairline rule set inside the edge */
+.card{
+  position:relative;
+  padding: clamp(2.4rem,9vw,3.75rem) clamp(1.5rem,6vw,3rem);
+  background: linear-gradient(168deg,
+    var(--lily),
+    color-mix(in srgb, var(--cream) 38%, var(--lily)));
+  border:1px solid color-mix(in srgb, var(--gilt) 52%, transparent);
+  border-radius:3px;
+  box-shadow:
+    0 1.5rem 3.5rem -1.5rem color-mix(in srgb, var(--plum) 34%, transparent),
+    0 .15rem .5rem -.25rem color-mix(in srgb, var(--plum) 16%, transparent);
+}
+.card::after{
+  content:""; position:absolute; inset:.55rem;
+  border:1px solid color-mix(in srgb, var(--gilt) 30%, transparent);
+  border-radius:2px;
+  pointer-events:none;
+}
+.card > *{ position:relative; z-index:1; }
+
 
 .invite__opening,
 .invite__closing{
@@ -442,7 +467,7 @@ main > footer{ padding-block: var(--pad-block); }
 .invite__parents{
   margin-top:clamp(3rem,9vw,5rem);
   padding-top:clamp(2rem,6vw,3rem);
-  border-top:1px solid var(--rule);
+  border-top:1px solid color-mix(in srgb, var(--gilt) 45%, transparent);
   display:grid; gap:1.75rem;
   font-size:.9375rem;
 }
@@ -1024,6 +1049,13 @@ main > footer{ position:relative; isolation:isolate; }
 main > section > .wrap,
 main > footer  > .wrap{ position:relative; z-index:2; }
 
+/* falling petals, behind everything the guest reads */
+.drift{
+  position:absolute; inset:0; z-index:1;
+  width:100%; height:100%;
+  pointer-events:none;
+}
+
 /* the wash */
 main > section::before,
 main > footer::before{
@@ -1047,18 +1079,20 @@ main > footer::after{
 
 .invite::before{
   background:
-    radial-gradient(58% 40% at 50% -6%,  color-mix(in srgb, var(--gilt) 34%, transparent), transparent 70%),
-    radial-gradient(48% 44% at 4% 100%,  color-mix(in srgb, var(--sage) 16%, transparent), transparent 72%);
+    radial-gradient(62% 44% at 50% -8%,  color-mix(in srgb, var(--gilt) 55%, transparent), transparent 72%),
+    radial-gradient(52% 48% at 2% 92%,   color-mix(in srgb, var(--sage) 26%, transparent), transparent 74%),
+    radial-gradient(46% 40% at 100% 30%, color-mix(in srgb, var(--gilt) 30%, transparent), transparent 72%),
+    linear-gradient(0deg, color-mix(in srgb, var(--cream) 52%, var(--lily)), transparent 14%);
 }
 
 .countdown::before{
-  background: radial-gradient(70% 100% at 50% 50%,
-              color-mix(in srgb, var(--cream) 60%, transparent), transparent 72%);
+  background:
+    radial-gradient(95% 150% at 50% 60%, color-mix(in srgb, var(--gilt) 22%, transparent), transparent 68%);
 }
 
 .story::before{
   background:
-    linear-gradient(180deg, var(--lily), transparent 14%),
+    linear-gradient(180deg, color-mix(in srgb, var(--cream) 52%, var(--lily)), transparent 16%),
     linear-gradient(100deg,
       color-mix(in srgb, var(--sage) 13%, transparent) 0%,
       transparent 42%),
@@ -1105,45 +1139,6 @@ main > footer::after{
 }
 
 
-/* ═══════════════════════════════════════════════════════════
-   THE GUEST BOOK
-   ═══════════════════════════════════════════════════════════ */
-
-.book{ padding-bottom: clamp(2.5rem,7vh,4rem) !important; }
-
-.book::before{
-  background:
-    linear-gradient(180deg, var(--night), transparent 12%),
-    radial-gradient(58% 44% at 12% 4%,  color-mix(in srgb, var(--plum) 68%, transparent), transparent 72%),
-    radial-gradient(50% 40% at 92% 96%, color-mix(in srgb, var(--wine) 26%, transparent), transparent 72%);
-}
-
-.book__form{ display:grid; gap:1.5rem; }
-
-.book__list{
-  list-style:none; margin:clamp(2.5rem,8vw,4rem) 0 0; padding:0;
-  display:grid; gap:.9rem;
-}
-
-.note{
-  padding:1.2rem 1.35rem;
-  border:1px solid var(--rule);
-  border-left:2px solid color-mix(in srgb, var(--gilt) 55%, transparent);
-  border-radius:2px;
-  background: color-mix(in srgb, var(--cream) 6%, transparent);
-}
-.note__msg{
-  margin:0;
-  font-family: var(--display); font-weight:250; font-style:italic;
-  font-size:1.05rem; line-height:1.65;
-  color: var(--text);
-}
-.note__by{
-  margin:.8rem 0 0;
-  font-size:.5625rem; letter-spacing:.24em; text-transform:uppercase;
-  color: var(--muted);
-}
-
 .signoff__share{ margin-top:1.75rem; }
 
 
@@ -1172,6 +1167,3 @@ main > footer::after{
 ::view-transition-old(root),
 ::view-transition-new(root){ animation-duration:.28s; }
 
-@media (min-width:56rem){
-  .book__list{ grid-template-columns:1fr 1fr; }
-}

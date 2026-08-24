@@ -11,7 +11,6 @@
  * Tabs it writes to (created automatically if missing):
  *   RSVP        one row per reply
  *   OPENS       one row the first time a guest opens their link on a given day
- *   GUESTBOOK   one row per message; set approved to TRUE to show it on the site
  *   NOT OPENED  built on demand by "Wedding → Who hasn't opened it"
  */
 
@@ -19,9 +18,7 @@ const SHEET_ID = 'PASTE_YOUR_SHEET_ID_HERE';
 
 const HEADERS = {
   RSVP:      ['timestamp', 'guest_id', 'display_name', 'church', 'party', 'count', 'phone', 'message'],
-  OPENS:     ['timestamp', 'guest_id', 'display_name'],
-  // set approved to TRUE for a message to appear on the site
-  GUESTBOOK: ['timestamp', 'guest_id', 'name', 'message', 'approved']
+  OPENS:     ['timestamp', 'guest_id', 'display_name']
 };
 
 function tab_(name) {
@@ -42,15 +39,6 @@ function doPost(e) {
 
     if (d.type === 'open') {
       tab_('OPENS').appendRow([new Date(), d.guestId || '', d.displayName || '']);
-
-    } else if (d.type === 'guestbook') {
-      tab_('GUESTBOOK').appendRow([
-        new Date(),
-        d.guestId || '',
-        String(d.name    || '').slice(0, 60),
-        String(d.message || '').slice(0, 400),
-        false                      // nothing shows on the site until you tick it
-      ]);
 
     } else {
       tab_('RSVP').appendRow([
@@ -78,30 +66,10 @@ function doPost(e) {
   }
 }
 
-/**
- * GET ?read=guestbook returns the approved messages for the site.
- * A bare GET is only ever a human checking the deployment is alive.
- */
-function doGet(e) {
-  const out = { ok: true, service: 'pasindu-and-nihara' };
-
-  if (e && e.parameter && e.parameter.read === 'guestbook') {
-    const sheet = tab_('GUESTBOOK');
-    const rows  = sheet.getLastRow() > 1
-      ? sheet.getRange(2, 1, sheet.getLastRow() - 1, 5).getValues()
-      : [];
-    const tz = Session.getScriptTimeZone();
-    out.entries = rows
-      .filter(r => r[4] === true || String(r[4]).toUpperCase() === 'TRUE')
-      .map(r => ({
-        name:    r[2],
-        message: r[3],
-        when:    Utilities.formatDate(new Date(r[0]), tz, 'd MMM yyyy')
-      }));
-  }
-
+/** A GET is only ever a human checking the deployment is alive. */
+function doGet() {
   return ContentService
-    .createTextOutput(JSON.stringify(out))
+    .createTextOutput(JSON.stringify({ ok: true, service: 'pasindu-and-nihara' }))
     .setMimeType(ContentService.MimeType.JSON);
 }
 

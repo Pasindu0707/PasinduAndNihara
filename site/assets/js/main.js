@@ -417,8 +417,103 @@ function setupLightbox(){
 
 
 /* --------- petals ---------
-   One short fall of arum-lily petals when somebody says yes. Canvas, no
-   library, removes itself, and never runs for reduced motion. */
+   Two uses of the same drawing: a slow drift behind the invitation, and one
+   short burst when somebody says yes. Canvas, no library, and neither runs
+   for anyone who has asked for reduced motion. */
+
+const PETAL = {
+  burst:  ['#FBF7EF', '#F5EBD0', '#CFB88C', '#E8DCC2'],
+  // on cream paper a cream petal is invisible — the drift needs warmer tints
+  drift:  ['#CFB88C', '#D8C7A4', '#A9B7A1', '#E0CFAA']
+};
+
+function drawPetal(ctx, b){
+  ctx.save();
+  ctx.translate(b.x, b.y);
+  ctx.rotate(b.a);
+  ctx.fillStyle = b.tint;
+  // two arcs meeting at a point, like the lily's spathe
+  ctx.beginPath();
+  ctx.moveTo(0, -b.r);
+  ctx.quadraticCurveTo(b.r, 0, 0, b.r);
+  ctx.quadraticCurveTo(-b.r * 0.45, 0, 0, -b.r);
+  ctx.fill();
+  ctx.restore();
+}
+
+function makeBits(n, w, h, cfg){
+  return Array.from({ length: n }, () => ({
+    x: Math.random() * w,
+    y: Math.random() * h,
+    r: cfg.r[0] + Math.random() * (cfg.r[1] - cfg.r[0]),
+    vy: cfg.vy[0] + Math.random() * (cfg.vy[1] - cfg.vy[0]),
+    vx: -cfg.vx + Math.random() * cfg.vx * 2,
+    spin: (Math.random() - 0.5) * cfg.spin,
+    a: Math.random() * Math.PI * 2,
+    tint: cfg.tints[(Math.random() * cfg.tints.length) | 0]
+  }));
+}
+
+/* ── the slow drift, behind a section ── */
+
+const drifts = [];
+let driftRunning = false;
+
+function drift(el){
+  if (reducedMotion || !el) return;
+
+  const cv = document.createElement('canvas');
+  cv.className = 'drift';
+  cv.setAttribute('aria-hidden', 'true');
+  el.append(cv);
+
+  const layer = { el, cv, ctx: cv.getContext('2d'), bits: [], w: 0, h: 0, on: false };
+
+  const size = () => {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const r = el.getBoundingClientRect();
+    layer.w = r.width; layer.h = r.height;
+    cv.width  = r.width  * dpr;
+    cv.height = r.height * dpr;
+    layer.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // roughly one petal per 26 000 square pixels, so a tall section is not denser
+    const n = Math.max(10, Math.min(30, Math.round(r.width * r.height / 21000)));
+    layer.bits = makeBits(n, r.width, r.height, {
+      r: [5, 11], vy: [9, 24], vx: 6, spin: 0.7, tints: PETAL.drift
+    });
+  };
+  size();
+  new ResizeObserver(size).observe(el);
+
+  // only animate while the section is on screen
+  new IntersectionObserver(es => { layer.on = es[0].isIntersecting; },
+    { rootMargin: '120px' }).observe(el);
+
+  drifts.push(layer);
+  if (!driftRunning){ driftRunning = true; requestAnimationFrame(driftFrame); }
+}
+
+function driftFrame(){
+  for (const L of drifts){
+    if (!L.on) continue;
+    L.ctx.clearRect(0, 0, L.w, L.h);
+    L.ctx.globalAlpha = 0.62;
+    for (const b of L.bits){
+      b.y += b.vy / 60;
+      b.x += Math.sin((b.y + b.a * 30) / 120) * (b.vx / 60);
+      b.a += b.spin / 60;
+      if (b.y - b.r > L.h){ b.y = -b.r * 2; b.x = Math.random() * L.w; }
+      drawPetal(L.ctx, b);
+    }
+  }
+  requestAnimationFrame(driftFrame);
+}
+
+function setupDrift(){
+  ['#invite', '#countdown'].forEach(sel => drift($(sel)));
+}
+
+/* ── one burst, on a yes ── */
 
 function petals(){
   if (reducedMotion) return;
@@ -437,17 +532,10 @@ function petals(){
   size();
   addEventListener('resize', size);
 
-  const TINTS = ['#FBF7EF', '#F5EBD0', '#CFB88C', '#E8DCC2'];
-  const bits = Array.from({ length: 42 }, () => ({
-    x: Math.random() * innerWidth,
-    y: -40 - Math.random() * innerHeight * 0.6,
-    r: 5 + Math.random() * 7,
-    vy: 42 + Math.random() * 55,
-    vx: -14 + Math.random() * 28,
-    spin: (Math.random() - 0.5) * 2.6,
-    a: Math.random() * Math.PI * 2,
-    tint: TINTS[(Math.random() * TINTS.length) | 0]
-  }));
+  const bits = makeBits(42, innerWidth, innerHeight, {
+    r: [5, 12], vy: [42, 97], vx: 14, spin: 2.6, tints: PETAL.burst
+  });
+  bits.forEach(b => { b.y = -40 - Math.random() * innerHeight * 0.6; });
 
   const START = performance.now();
   const LIFE  = 5200;
@@ -464,98 +552,11 @@ function petals(){
       b.x += Math.sin((b.y + b.a * 40) / 90) * (b.vx / 60) + b.vx / 240;
       b.a += b.spin / 60;
       if (b.y > innerHeight + 40) b.y = -40;
-
-      ctx.save();
-      ctx.translate(b.x, b.y);
-      ctx.rotate(b.a);
-      ctx.fillStyle = b.tint;
-      // a petal: two arcs meeting at a point, like the lily's spathe
-      ctx.beginPath();
-      ctx.moveTo(0, -b.r);
-      ctx.quadraticCurveTo(b.r, 0, 0, b.r);
-      ctx.quadraticCurveTo(-b.r * 0.45, 0, 0, -b.r);
-      ctx.fill();
-      ctx.restore();
+      drawPetal(ctx, b);
     }
     requestAnimationFrame(frame);
   };
   requestAnimationFrame(frame);
-}
-
-
-/* --------- the guest book --------- */
-
-function bookEntry(entry){
-  const li = document.createElement('li');
-  li.className = 'note';
-  const msg = document.createElement('p');
-  msg.className = 'note__msg';
-  msg.textContent = entry.message;
-  const by = document.createElement('p');
-  by.className = 'note__by';
-  by.textContent = entry.when ? entry.name + ' · ' + entry.when : entry.name;
-  li.append(msg, by);
-  return li;
-}
-
-async function setupGuestbook(){
-  const form = $('#bookForm');
-  const list = $('#bookList');
-  if (!form || !list) return;
-
-  const status = $('#bookStatus');
-  const submit = $('#bookSubmit');
-
-  /* what has already been written */
-  try{
-    const res  = await fetch(CONFIG.rsvpEndpoint + '?read=guestbook', { cache: 'no-store' });
-    const data = await res.json();
-    if (Array.isArray(data.entries)){
-      data.entries.slice(-40).reverse().forEach(e => list.append(bookEntry(e)));
-    }
-  }catch{
-    // endpoint not reachable yet — the form still works, and a guest sees
-    // their own message the moment they send it
-  }
-
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
-    const name    = $('#bookName').value.trim();
-    const message = $('#bookMsg').value.trim();
-
-    if (!name || !message){
-      status.textContent = 'A name and a message, please.';
-      status.classList.add('is-error');
-      return;
-    }
-    status.classList.remove('is-error');
-    status.textContent = 'Sending…';
-    submit.disabled = true;
-
-    try{
-      const res = await fetch(CONFIG.rsvpEndpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          type: 'guestbook',
-          guestId: guest ? guest.id : '',
-          name, message
-        })
-      });
-      const body = await res.json();
-      if (!body.ok) throw new Error(body.error || 'rejected');
-
-      list.prepend(bookEntry({ name, message, when: 'just now' }));
-      form.reset();
-      status.textContent = 'Written down. Thank you.';
-    }catch{
-      status.innerHTML = 'That didn’t send. Please message us instead — ' +
-        '<a href="https://wa.me/94778909086" target="_blank" rel="noopener">077 890 9086</a>.';
-      status.classList.add('is-error');
-    }finally{
-      submit.disabled = false;
-    }
-  });
 }
 
 
@@ -749,12 +750,12 @@ function devJump(){
   setupInviteLine();
   setupCountdown();
   setupScroll();
+  setupDrift();
   setupTrack();
   setupGallery();
   setupLightbox();
   setupCalendar();
   setupRsvp();
-  setupGuestbook();
   setupShare();
   setupMusic();
   setupThemeColour();
