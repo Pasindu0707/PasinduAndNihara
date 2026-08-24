@@ -10,6 +10,7 @@ site/                 everything that gets published
   index.html
   assets/css/style.css
   assets/js/main.js   config lives at the top of this file
+  assets/js/vendor/   lenis.min.js — vendored, no CDN at runtime
   assets/img/*.webp   built from img/ — do not edit by hand
   assets/video/       hero-sm.mp4 (phones), hero-lg.mp4 (desktop), poster
   assets/cal/*.ics    add-to-calendar files
@@ -75,6 +76,12 @@ In the spreadsheet, **Wedding → Who hasn't opened it** builds a `NOT OPENED`
 tab listing every guest with no open on record. That menu comes from
 `tools/apps-script.gs`, which also handles RSVP posts — paste it over the
 script in the sheet and redeploy.
+
+## The guest book
+
+Messages post to the sheet's `GUESTBOOK` tab with `approved` set to **FALSE**.
+Nothing appears on the site until you tick that box, so you see every message
+before anyone else does. The page reads back only approved entries.
 
 ## Known limitation — the RSVP endpoint
 

@@ -70,6 +70,10 @@ for (const shot of SHOTS){
   await send('Page.navigate', { url: `${URL_}&y=${shot.y}` });
   await sleep(2200);
   await send('Runtime.evaluate', { expression: `window.scrollTo(0, ${shot.y})` });
+  if (process.env.EVAL){
+    await send('Runtime.evaluate', { expression: process.env.EVAL });
+    await sleep(Number(process.env.EVAL_WAIT || 900));
+  }
   await sleep(700);
   const { data } = await send('Page.captureScreenshot', { format: 'png' });
   writeFileSync(join(OUT, `${shot.name}.png`), Buffer.from(data, 'base64'));

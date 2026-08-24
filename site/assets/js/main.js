@@ -6,6 +6,8 @@ const CONFIG = {
   // Google Apps Script web-app endpoint (Deploy → Web app → /exec URL)
   rsvpEndpoint: 'https://script.google.com/macros/s/AKfycbwJV6_u8w6rKijYoRoR7ZnozPnyj8zPAZiHqbSl5vygm-Fc6Hn7TNCBfoRXiqzwDZMVIQ/exec',
   ceremony: '2027-01-16T09:30:00+05:30',
+  party:    '2027-01-17T19:00:00+05:30',
+  partyEnd: '2027-01-17T23:30:00+05:30',
   fallbackName: 'you and your family',
   galleryCount: 7,
   // set to 'assets/audio/theme.mp3' once a track has been chosen
@@ -193,25 +195,77 @@ function setupInviteLine(){
 /* ───────── countdown ───────── */
 
 function setupCountdown(){
-  const target = new Date(CONFIG.ceremony).getTime();
-  const days = $('#cdDays'), hours = $('#cdHours'), mins = $('#cdMins');
-  if (!days) return;
+  const ceremony = new Date(CONFIG.ceremony).getTime();
+  const party    = new Date(CONFIG.party).getTime();
+  const over     = new Date(CONFIG.partyEnd).getTime();
+
+  const row   = $('#countdownRow');
+  const label = $('#countdownLabel');
+  const days  = $('#cdDays'), hours = $('#cdHours'), mins = $('#cdMins');
+  if (!row || !days) return;
+
+  const say = text => {
+    row.innerHTML = `<p class="beat__closer" style="margin:0">${text}</p>`;
+  };
 
   const tick = () => {
-    const left = target - Date.now();
-    if (left <= 0){
-      $('#countdownRow').innerHTML =
-        '<p class="beat__closer" style="margin:0">Today is the day.</p>';
-      return;
+    const now = Date.now();
+
+    if (now >= over){
+      document.body.classList.add('is-after');
+      if (label) label.textContent = 'And that was that';
+      say('Thank you for being there.');
+      return true;
     }
-    const m = Math.floor(left / 60000);
+    if (now >= party){
+      if (label) label.textContent = 'Right now';
+      say('Tonight.');
+      return true;
+    }
+
+    const target = now >= ceremony ? party : ceremony;
+    if (label){
+      label.textContent = now >= ceremony
+        ? 'Until the celebration begins'
+        : 'Until the church doors open';
+    }
+
+    const m = Math.floor((target - now) / 60000);
     days.textContent  = Math.floor(m / 1440);
     hours.textContent = Math.floor(m % 1440 / 60);
     mins.textContent  = m % 60;
+    return false;
   };
 
-  tick();
-  setInterval(tick, 30000);
+  if (tick()) return;
+  const timer = setInterval(() => { if (tick()) clearInterval(timer); }, 30000);
+}
+
+
+/* ───────── momentum scrolling ─────────
+   Lenis (13 KB, vendored — no CDN at runtime). It keeps native scroll,
+   position:sticky and IntersectionObserver intact, which the ruler needs. */
+
+let lenis = null;
+
+function setupScroll(){
+  if (reducedMotion || !window.Lenis) return;
+
+  // CSS smooth scrolling and Lenis fight over the same gesture
+  document.documentElement.style.scrollBehavior = 'auto';
+
+  lenis = new Lenis({ duration: 1.05, smoothWheel: true, touchMultiplier: 1.5 });
+  const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+  requestAnimationFrame(raf);
+
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a) return;
+    const target = document.querySelector(a.getAttribute('href'));
+    if (!target) return;
+    e.preventDefault();
+    lenis.scrollTo(target, { offset: -8 });
+  });
 }
 
 
@@ -314,24 +368,46 @@ function setupLightbox(){
   if (!box) return;
 
   let lastFocus = null;
+  let morphing  = null;
 
-  const open = src => {
-    lastFocus = document.activeElement;
+  const doOpen = src => {
     img.src = src;
     box.hidden = false;
     document.body.style.overflow = 'hidden';
     close.focus();
   };
-  const shut = () => {
+  const doShut = () => {
     box.hidden = true;
     img.removeAttribute('src');
     document.body.style.overflow = '';
-    lastFocus?.focus();
+  };
+
+  // where supported the thumbnail grows into the lightbox instead of
+  // cross-fading; everywhere else this is just a plain open
+  const transition = fn => {
+    if (!document.startViewTransition || reducedMotion) return fn();
+    document.startViewTransition(fn);
+  };
+
+  const open = (src, thumb) => {
+    lastFocus = document.activeElement;
+    morphing = thumb;
+    if (thumb) thumb.style.viewTransitionName = 'shot';
+    transition(() => doOpen(src));
+  };
+
+  const shut = () => {
+    transition(doShut);
+    setTimeout(() => {
+      if (morphing) morphing.style.viewTransitionName = '';
+      morphing = null;
+      lastFocus && lastFocus.focus();
+    }, 400);
   };
 
   document.addEventListener('click', e => {
     const btn = e.target.closest('.shots button');
-    if (btn) open(btn.dataset.full);
+    if (btn) open(btn.dataset.full, btn.querySelector('img'));
   });
   box.addEventListener('click', shut);
   document.addEventListener('keydown', e => {
@@ -340,7 +416,177 @@ function setupLightbox(){
 }
 
 
-/* ───────── add to calendar ───────── */
+/* --------- petals ---------
+   One short fall of arum-lily petals when somebody says yes. Canvas, no
+   library, removes itself, and never runs for reduced motion. */
+
+function petals(){
+  if (reducedMotion) return;
+
+  const cv = document.createElement('canvas');
+  cv.className = 'petals';
+  document.body.append(cv);
+  const ctx = cv.getContext('2d');
+
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const size = () => {
+    cv.width  = innerWidth  * dpr;
+    cv.height = innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  };
+  size();
+  addEventListener('resize', size);
+
+  const TINTS = ['#FBF7EF', '#F5EBD0', '#CFB88C', '#E8DCC2'];
+  const bits = Array.from({ length: 42 }, () => ({
+    x: Math.random() * innerWidth,
+    y: -40 - Math.random() * innerHeight * 0.6,
+    r: 5 + Math.random() * 7,
+    vy: 42 + Math.random() * 55,
+    vx: -14 + Math.random() * 28,
+    spin: (Math.random() - 0.5) * 2.6,
+    a: Math.random() * Math.PI * 2,
+    tint: TINTS[(Math.random() * TINTS.length) | 0]
+  }));
+
+  const START = performance.now();
+  const LIFE  = 5200;
+
+  const frame = now => {
+    const t = now - START;
+    if (t > LIFE){ cv.remove(); removeEventListener('resize', size); return; }
+
+    ctx.clearRect(0, 0, innerWidth, innerHeight);
+    ctx.globalAlpha = t > LIFE - 900 ? (LIFE - t) / 900 : 1;
+
+    for (const b of bits){
+      b.y += b.vy / 60;
+      b.x += Math.sin((b.y + b.a * 40) / 90) * (b.vx / 60) + b.vx / 240;
+      b.a += b.spin / 60;
+      if (b.y > innerHeight + 40) b.y = -40;
+
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.a);
+      ctx.fillStyle = b.tint;
+      // a petal: two arcs meeting at a point, like the lily's spathe
+      ctx.beginPath();
+      ctx.moveTo(0, -b.r);
+      ctx.quadraticCurveTo(b.r, 0, 0, b.r);
+      ctx.quadraticCurveTo(-b.r * 0.45, 0, 0, -b.r);
+      ctx.fill();
+      ctx.restore();
+    }
+    requestAnimationFrame(frame);
+  };
+  requestAnimationFrame(frame);
+}
+
+
+/* --------- the guest book --------- */
+
+function bookEntry(entry){
+  const li = document.createElement('li');
+  li.className = 'note';
+  const msg = document.createElement('p');
+  msg.className = 'note__msg';
+  msg.textContent = entry.message;
+  const by = document.createElement('p');
+  by.className = 'note__by';
+  by.textContent = entry.when ? entry.name + ' · ' + entry.when : entry.name;
+  li.append(msg, by);
+  return li;
+}
+
+async function setupGuestbook(){
+  const form = $('#bookForm');
+  const list = $('#bookList');
+  if (!form || !list) return;
+
+  const status = $('#bookStatus');
+  const submit = $('#bookSubmit');
+
+  /* what has already been written */
+  try{
+    const res  = await fetch(CONFIG.rsvpEndpoint + '?read=guestbook', { cache: 'no-store' });
+    const data = await res.json();
+    if (Array.isArray(data.entries)){
+      data.entries.slice(-40).reverse().forEach(e => list.append(bookEntry(e)));
+    }
+  }catch{
+    // endpoint not reachable yet — the form still works, and a guest sees
+    // their own message the moment they send it
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const name    = $('#bookName').value.trim();
+    const message = $('#bookMsg').value.trim();
+
+    if (!name || !message){
+      status.textContent = 'A name and a message, please.';
+      status.classList.add('is-error');
+      return;
+    }
+    status.classList.remove('is-error');
+    status.textContent = 'Sending…';
+    submit.disabled = true;
+
+    try{
+      const res = await fetch(CONFIG.rsvpEndpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          type: 'guestbook',
+          guestId: guest ? guest.id : '',
+          name, message
+        })
+      });
+      const body = await res.json();
+      if (!body.ok) throw new Error(body.error || 'rejected');
+
+      list.prepend(bookEntry({ name, message, when: 'just now' }));
+      form.reset();
+      status.textContent = 'Written down. Thank you.';
+    }catch{
+      status.innerHTML = 'That didn’t send. Please message us instead — ' +
+        '<a href="https://wa.me/94778909086" target="_blank" rel="noopener">077 890 9086</a>.';
+      status.classList.add('is-error');
+    }finally{
+      submit.disabled = false;
+    }
+  });
+}
+
+
+/* --------- share --------- */
+
+function setupShare(){
+  const btn = $('#shareBtn');
+  if (!btn) return;
+
+  const url  = location.origin + location.pathname;   // never the personal link
+  const data = {
+    title: 'Pasindu & Nihara — 16 & 17 January 2027',
+    text: 'Pasindu and Nihara are getting married. Here is the invitation.',
+    url
+  };
+
+  if (!navigator.share && !navigator.clipboard){ btn.remove(); return; }
+
+  btn.addEventListener('click', async () => {
+    try{
+      if (navigator.share) return await navigator.share(data);
+      await navigator.clipboard.writeText(url);
+      const was = btn.textContent;
+      btn.textContent = 'Link copied';
+      setTimeout(() => { btn.textContent = was; }, 2200);
+    }catch{ /* the share sheet was dismissed */ }
+  });
+}
+
+
+/* ───────── add to calendar ───────── *//* ───────── add to calendar ───────── */
 
 function setupCalendar(){
   $$('[data-ics]').forEach(btn => {
@@ -414,6 +660,8 @@ function setupRsvp(){
       });
       const body = await res.json();
       if (!body.ok) throw new Error(body.error || 'rejected');
+
+      if (coming) petals();
 
       form.innerHTML = coming
         ? `<p class="beat__closer" style="text-align:center;margin:0">
@@ -500,11 +748,14 @@ function devJump(){
   setupReveals();
   setupInviteLine();
   setupCountdown();
+  setupScroll();
   setupTrack();
   setupGallery();
   setupLightbox();
   setupCalendar();
   setupRsvp();
+  setupGuestbook();
+  setupShare();
   setupMusic();
   setupThemeColour();
   devJump();

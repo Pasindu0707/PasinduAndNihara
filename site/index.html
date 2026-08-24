@@ -115,7 +115,7 @@
 <!-- ══════════ COUNTDOWN ══════════ -->
 <section class="countdown" id="countdown" data-act="day">
   <div class="wrap">
-    <p class="label reveal">Until the church doors open</p>
+    <p class="label reveal" id="countdownLabel">Until the church doors open</p>
     <div class="countdown__row reveal" id="countdownRow" role="timer" aria-live="off">
       <div class="countdown__unit"><b id="cdDays">—</b><span>days</span></div>
       <div class="countdown__unit"><b id="cdHours">—</b><span>hours</span></div>
@@ -436,6 +436,33 @@
 </section>
 
 
+<!-- ══════════ GUEST BOOK ══════════ -->
+<section class="book" id="guestbook" data-act="night">
+  <div class="wrap wrap--narrow">
+    <header class="section-head reveal">
+      <p class="label">However short</p>
+      <h2 class="section-title">Say something to us</h2>
+    </header>
+
+    <form class="book__form reveal" id="bookForm" novalidate>
+      <div class="field">
+        <label class="label" for="bookName">Your name</label>
+        <input id="bookName" name="name" maxlength="60" autocomplete="name" required>
+      </div>
+      <div class="field">
+        <label class="label" for="bookMsg">Your message</label>
+        <textarea id="bookMsg" name="message" rows="3" maxlength="400"
+                  placeholder="A wish, a memory, or something you'd only say out loud" required></textarea>
+      </div>
+      <button class="btn btn--solid" type="submit" id="bookSubmit">Sign the book</button>
+      <p class="rsvp__status" id="bookStatus" role="status" aria-live="polite"></p>
+    </form>
+
+    <ul class="book__list" id="bookList" aria-live="polite"></ul>
+  </div>
+</section>
+
+
 <!-- ══════════ GALLERY ══════════ -->
 <section class="gallery" id="gallery" data-act="night">
   <div class="wrap">
@@ -465,6 +492,8 @@
     <p class="signoff__line">We would rather have you there than anything you could bring.</p>
     <p class="signoff__names">Pasindu &amp; Nihara</p>
     <p class="signoff__tag">#PasinduWedsNihara</p>
+
+    <button class="btn signoff__share" id="shareBtn" type="button">Share this invitation</button>
 
     <div class="signoff__contacts">
       <p class="label">Any questions, call or message us</p>
@@ -497,6 +526,7 @@
   </defs>
 </svg>
 
+<script src="assets/js/vendor/lenis.min.js" defer></script>
 <script src="assets/js/main.js" defer></script>
 </body>
 </html>

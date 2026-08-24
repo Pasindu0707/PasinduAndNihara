@@ -16,7 +16,7 @@
 
   --paper:  var(--lily);
   --text:   var(--ink);
-  --muted:  color-mix(in srgb, var(--ink) 58%, transparent);
+  --muted:  color-mix(in srgb, var(--ink) 74%, transparent);
   --rule:   color-mix(in srgb, var(--sage) 30%, transparent);
   --accent: var(--sage);
 
@@ -497,7 +497,11 @@ main > footer{ padding-block: var(--pad-block); }
   padding:.85rem 0 .7rem;
   margin-bottom:clamp(1.5rem,5vw,2.5rem);
   background:linear-gradient(180deg,
-    color-mix(in srgb, var(--cream) 32%, var(--lily)) 72%, transparent);
+    color-mix(in srgb, var(--cream) 34%, var(--lily)) 58%,
+    transparent);
+  -webkit-backdrop-filter:blur(9px);
+  backdrop-filter:blur(9px);
+  mask-image:linear-gradient(180deg, #000 62%, transparent);
 }
 
 /* a position indicator, not a second headline — the beat carries the year */
@@ -583,7 +587,7 @@ main > footer{ padding-block: var(--pad-block); }
   line-height:1; letter-spacing:-.015em;
   font-variant-numeric:tabular-nums;
 }
-.beat--quiet .beat__year{ color: color-mix(in srgb, var(--ink) 45%, transparent); }
+.beat--quiet .beat__year{ color: color-mix(in srgb, var(--ink) 62%, transparent); }
 .beat--mark  .beat__year{ color: var(--wine); }
 
 .beat__pic{ margin:0 0 1rem; }
@@ -725,7 +729,7 @@ main > footer{ padding-block: var(--pad-block); }
 [data-act="night"]{
   --paper: var(--night);
   --text:  var(--cream);
-  --muted: color-mix(in srgb, var(--cream) 52%, transparent);
+  --muted: color-mix(in srgb, var(--cream) 70%, transparent);
   --rule:  color-mix(in srgb, var(--gilt) 26%, transparent);
   --accent: var(--gilt);
   background: var(--paper);
@@ -834,7 +838,7 @@ main > footer{ padding-block: var(--pad-block); }
   transition:border-color .3s var(--ease);
 }
 .field input::placeholder,
-.field textarea::placeholder{ color: color-mix(in srgb, var(--cream) 35%, transparent); }
+.field textarea::placeholder{ color: color-mix(in srgb, var(--cream) 52%, transparent); }
 .field input:focus,
 .field textarea:focus{ border-color: var(--gilt); outline:none; }
 .field textarea{ resize:vertical; }
@@ -1001,3 +1005,173 @@ main > footer{ padding-block: var(--pad-block); }
 .is-flat .reveal{ opacity:1 !important; transform:none !important; transition:none !important; }
 .is-flat .invite__guest{ clip-path:none !important; animation:none !important; }
 .is-flat .invite__rule line{ stroke-dashoffset:0 !important; transition:none !important; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   ATMOSPHERE
+   Flat colour reads as unfinished at this scale. Every section
+   gets a paper grain and a wash of light — behind the content,
+   never over it, so photographs stay untouched.
+   ═══════════════════════════════════════════════════════════ */
+
+:root{
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+main > section,
+main > footer{ position:relative; isolation:isolate; }
+
+main > section > .wrap,
+main > footer  > .wrap{ position:relative; z-index:2; }
+
+/* the wash */
+main > section::before,
+main > footer::before{
+  content:""; position:absolute; inset:0; z-index:0;
+  pointer-events:none;
+}
+
+/* the grain — sits under the content, over the wash */
+main > section::after,
+main > footer::after{
+  content:""; position:absolute; inset:0; z-index:1;
+  background-image: var(--grain);
+  background-size:140px 140px;
+  opacity:.085;
+  mix-blend-mode:multiply;
+  pointer-events:none;
+}
+[data-act="night"]::after{ opacity:.14; mix-blend-mode:screen; }
+
+/* ── daylight ── */
+
+.invite::before{
+  background:
+    radial-gradient(58% 40% at 50% -6%,  color-mix(in srgb, var(--gilt) 34%, transparent), transparent 70%),
+    radial-gradient(48% 44% at 4% 100%,  color-mix(in srgb, var(--sage) 16%, transparent), transparent 72%);
+}
+
+.countdown::before{
+  background: radial-gradient(70% 100% at 50% 50%,
+              color-mix(in srgb, var(--cream) 60%, transparent), transparent 72%);
+}
+
+.story::before{
+  background:
+    linear-gradient(180deg, var(--lily), transparent 14%),
+    linear-gradient(100deg,
+      color-mix(in srgb, var(--sage) 13%, transparent) 0%,
+      transparent 42%),
+    radial-gradient(46% 30% at 96% 4%, color-mix(in srgb, var(--gilt) 30%, transparent), transparent 70%);
+}
+
+.day--church::before{
+  background:
+    radial-gradient(60% 45% at 12% 0%,  color-mix(in srgb, var(--lily) 90%, transparent), transparent 68%),
+    radial-gradient(55% 50% at 100% 92%, color-mix(in srgb, var(--gilt) 26%, transparent), transparent 70%);
+}
+
+/* ── nightfall ── */
+
+.day--party::before{
+  background:
+    radial-gradient(62% 48% at 78% 8%,  color-mix(in srgb, var(--wine) 42%, transparent), transparent 72%),
+    radial-gradient(70% 55% at 10% 96%, color-mix(in srgb, var(--plum) 70%, transparent), transparent 74%);
+}
+
+.rsvp::before{
+  background:
+    linear-gradient(180deg, var(--night), transparent 12%),
+    radial-gradient(52% 42% at 50% 0%,  color-mix(in srgb, var(--wine) 34%, transparent), transparent 74%),
+    radial-gradient(90% 70% at 50% 120%, color-mix(in srgb, var(--gilt) 9%, transparent), transparent 70%);
+}
+
+.gallery::before{
+  background:
+    linear-gradient(180deg, var(--night), transparent 14%),
+    radial-gradient(80% 45% at 50% 0%,
+              color-mix(in srgb, var(--plum) 75%, transparent), transparent 72%);
+}
+
+.signoff{ overflow:hidden; }
+.signoff::before{
+  background-image:
+    radial-gradient(48% 38% at 50% 14%, color-mix(in srgb, var(--wine) 30%, transparent), transparent 72%),
+    radial-gradient(125% 85% at 50% 100%, transparent 52%, rgba(0,0,0,.5)),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 96' fill='none' stroke='%23CFB88C' stroke-opacity='.085' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M32 54C15 49 8.5 31 18.5 16.5 26.5 5 45 2.5 53 11c7.5 8 5 24-9 33-3.6 2.6-7.6 6.4-12 10Z'/%3E%3Cpath d='M33.5 45c-2.5-8-1.5-18 2-24.5'/%3E%3Cpath d='M32 54v38'/%3E%3Cpath d='M32 74c-6-1.5-10-6-11-12 6.5.5 10 4 11 8'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:center, center, right -3rem bottom -3rem;
+  background-size:auto, auto, 15rem auto;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   THE GUEST BOOK
+   ═══════════════════════════════════════════════════════════ */
+
+.book{ padding-bottom: clamp(2.5rem,7vh,4rem) !important; }
+
+.book::before{
+  background:
+    linear-gradient(180deg, var(--night), transparent 12%),
+    radial-gradient(58% 44% at 12% 4%,  color-mix(in srgb, var(--plum) 68%, transparent), transparent 72%),
+    radial-gradient(50% 40% at 92% 96%, color-mix(in srgb, var(--wine) 26%, transparent), transparent 72%);
+}
+
+.book__form{ display:grid; gap:1.5rem; }
+
+.book__list{
+  list-style:none; margin:clamp(2.5rem,8vw,4rem) 0 0; padding:0;
+  display:grid; gap:.9rem;
+}
+
+.note{
+  padding:1.2rem 1.35rem;
+  border:1px solid var(--rule);
+  border-left:2px solid color-mix(in srgb, var(--gilt) 55%, transparent);
+  border-radius:2px;
+  background: color-mix(in srgb, var(--cream) 6%, transparent);
+}
+.note__msg{
+  margin:0;
+  font-family: var(--display); font-weight:250; font-style:italic;
+  font-size:1.05rem; line-height:1.65;
+  color: var(--text);
+}
+.note__by{
+  margin:.8rem 0 0;
+  font-size:.5625rem; letter-spacing:.24em; text-transform:uppercase;
+  color: var(--muted);
+}
+
+.signoff__share{ margin-top:1.75rem; }
+
+
+/* ═══════════════════════════════════════════════════════════
+   PETALS — one fall, on a yes
+   ═══════════════════════════════════════════════════════════ */
+
+.petals{
+  position:fixed; inset:0; z-index:80;
+  width:100%; height:100%;
+  pointer-events:none;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   VIEW TRANSITIONS — the thumbnail grows into the lightbox
+   ═══════════════════════════════════════════════════════════ */
+
+#lightboxImg{ view-transition-name: shot; }
+
+::view-transition-old(shot),
+::view-transition-new(shot){
+  animation-duration:.42s;
+  animation-timing-function: cubic-bezier(.22,.61,.36,1);
+}
+::view-transition-old(root),
+::view-transition-new(root){ animation-duration:.28s; }
+
+@media (min-width:56rem){
+  .book__list{ grid-template-columns:1fr 1fr; }
+}
