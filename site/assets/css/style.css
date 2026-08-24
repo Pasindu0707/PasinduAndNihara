@@ -823,7 +823,41 @@ main > footer{ padding-block: var(--pad-block); }
    THE TWO DAYS
    ═══════════════════════════════════════════════════════════ */
 
+.day{ overflow:hidden; }
+
+/* the two days are the important plates, so they get the frame the hero has */
+.day__frame{
+  inset:clamp(1rem, 3.5vw, 2rem);
+  z-index:2;
+  border-color: color-mix(in srgb, var(--accent) 34%, transparent);
+}
+.day__frame .corner{ color: color-mix(in srgb, var(--accent) 62%, transparent); }
+.day__frame::before{ border-color: color-mix(in srgb, var(--accent) 16%, transparent); }
+
+/* the date, very large and very faint, bleeding off the edge */
+.day__ghost{
+  position:absolute; z-index:1;
+  left:-.14em; top:50%; translate:0 -50%;
+  font-family: var(--display); font-weight:200;
+  font-size:clamp(18rem, 44vw, 34rem);
+  line-height:.75;
+  letter-spacing:-.05em;
+  color: color-mix(in srgb, var(--accent) 6%, transparent);
+  pointer-events:none;
+  user-select:none;
+}
+.day__ghost--right{ left:auto; right:-.14em; }
+
+/* gold on near-black carries further than sage on cream */
+[data-act="night"] .day__ghost{ color: color-mix(in srgb, var(--gilt) 4%, transparent); }
+
+/* on a phone the copy runs down the middle, so the numeral sits low and wide */
+@media (max-width:55.99rem){
+  .day__ghost{ top:auto; bottom:-.12em; translate:0 0; font-size:min(52vw, 22rem); }
+}
+
 .day__grid{
+  position:relative; z-index:3;
   display:grid; gap:clamp(2rem,7vw,3.5rem);
   align-items:center;
 }
@@ -847,7 +881,7 @@ main > footer{ padding-block: var(--pad-block); }
 /* the date, set like a plate */
 .stamp{
   display:inline-grid; justify-items:center;
-  margin:1.1rem 0 1.25rem;
+  margin:1.1rem auto 1.25rem;
   padding:.55rem 1.4rem .7rem;
   border-top:1px solid color-mix(in srgb, var(--accent) 45%, transparent);
   border-bottom:1px solid color-mix(in srgb, var(--accent) 45%, transparent);
@@ -884,7 +918,7 @@ main > footer{ padding-block: var(--pad-block); }
 /* shared hairline flourish */
 .flourish{
   display:flex; align-items:center; gap:.7rem;
-  margin:clamp(1.4rem,4vw,1.9rem) 0;
+  margin:clamp(1.4rem,4vw,1.9rem) auto;
   max-width:11rem;
 }
 .flourish i{
@@ -898,7 +932,7 @@ main > footer{ padding-block: var(--pad-block); }
 }
 
 /* an engraved schedule rather than a plain list */
-.detail{ margin:0 0 2rem; max-width:32rem; }
+.detail{ margin:0 auto 2rem; max-width:32rem; }
 .detail > div{
   display:grid; gap:.3rem;
   padding:.85rem 0;
@@ -914,7 +948,11 @@ main > footer{ padding-block: var(--pad-block); }
 }
 .detail dd{ margin:0; font-size:1rem; line-height:1.6; }
 
-.actions{ display:flex; flex-wrap:wrap; gap:.75rem; }
+.actions{ display:flex; flex-wrap:wrap; gap:.75rem; justify-content:center; }
+
+/* centred on a phone; the two-column plate takes over on wide screens */
+.day__copy{ text-align:center; }
+.day__copy .detail > div{ justify-items:center; }
 
 
 /* dusk — cream to night through a real sunset ramp. Mixing cream with the
@@ -1189,6 +1227,12 @@ main > footer{ padding-block: var(--pad-block); }
   .day__grid--flip .day__figure{ order:2; }
 
   /* label and value side by side, like a printed schedule */
+  .day__copy{ text-align:left; }
+  .day__copy .detail > div{ justify-items:start; }
+  .stamp{ margin-left:0; margin-right:0; }
+  .flourish{ margin-left:0; margin-right:0; }
+  .detail{ margin-left:0; margin-right:0; }
+  .actions{ justify-content:flex-start; }
   .detail > div{ grid-template-columns:7.5rem 1fr; gap:1.5rem; align-items:baseline; }
   .detail dt{ padding-top:.15rem; }
 
@@ -1293,8 +1337,14 @@ main > footer::after{
 
 .day--church::before{
   background:
-    radial-gradient(60% 45% at 12% 0%,  color-mix(in srgb, var(--lily) 90%, transparent), transparent 68%),
-    radial-gradient(50% 42% at 100% 88%, color-mix(in srgb, var(--gilt) 14%, transparent), transparent 72%);
+    /* a shaft of light, the way it comes through a window */
+    linear-gradient(196deg,
+      transparent 26%,
+      color-mix(in srgb, var(--lily) 85%, transparent) 38%,
+      color-mix(in srgb, var(--gilt) 22%, transparent) 47%,
+      transparent 58%),
+    radial-gradient(58% 44% at 14% -4%, color-mix(in srgb, var(--lily) 92%, transparent), transparent 68%),
+    radial-gradient(52% 44% at 100% 92%, color-mix(in srgb, var(--sage) 14%, transparent), transparent 72%);
 }
 
 /* ── nightfall ── */
@@ -1302,8 +1352,9 @@ main > footer::after{
 .day--party::before{
   background:
     linear-gradient(180deg, var(--night), transparent 14%),
-    radial-gradient(62% 48% at 78% 8%,  color-mix(in srgb, var(--wine) 42%, transparent), transparent 72%),
-    radial-gradient(70% 55% at 10% 96%, color-mix(in srgb, var(--plum) 70%, transparent), transparent 74%);
+    radial-gradient(46% 34% at 74% 16%, color-mix(in srgb, var(--wine) 52%, transparent), transparent 70%),
+    radial-gradient(38% 30% at 22% 74%, color-mix(in srgb, var(--gilt) 16%, transparent), transparent 72%),
+    radial-gradient(75% 58% at 8% 100%, color-mix(in srgb, var(--plum) 72%, transparent), transparent 74%);
 }
 
 .rsvp::before{

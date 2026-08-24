@@ -450,8 +450,21 @@ function setupLightbox(){
 const PETAL = {
   burst:  ['#FBF7EF', '#F5EBD0', '#CFB88C', '#E8DCC2'],
   // on cream paper a cream petal is invisible — the drift needs warmer tints
-  drift:  ['#CFB88C', '#D8C7A4', '#A9B7A1', '#E0CFAA']
+  drift:  ['#CFB88C', '#D8C7A4', '#A9B7A1', '#E0CFAA'],
+  // the party photograph is full of stage lights; the section answers it
+  bokeh:  ['#CFB88C', '#F5EBD0', '#A8515F', '#E8C48E']
 };
+
+function drawBokeh(ctx, b){
+  const g = ctx.createRadialGradient(b.x, b.y, 0, b.x, b.y, b.r);
+  g.addColorStop(0,   b.tint);
+  g.addColorStop(0.55, b.tint + '55');
+  g.addColorStop(1,   b.tint + '00');
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+  ctx.fill();
+}
 
 function drawPetal(ctx, b){
   ctx.save();
@@ -489,7 +502,7 @@ function drift(el, opts = {}){
   if (reducedMotion || !el) return;
   const cfg = {
     tints: PETAL.drift, alpha: 0.62, density: 21000, max: 30,
-    r: [5, 11], vy: [9, 24], ...opts
+    r: [5, 11], vy: [9, 24], shape: 'petal', ...opts
   };
 
   const cv = document.createElement('canvas');
@@ -497,7 +510,8 @@ function drift(el, opts = {}){
   cv.setAttribute('aria-hidden', 'true');
   el.append(cv);
 
-  const layer = { el, cv, ctx: cv.getContext('2d'), bits: [], w: 0, h: 0, on: false, alpha: cfg.alpha };
+  const layer = { el, cv, ctx: cv.getContext('2d'), bits: [], w: 0, h: 0, on: false,
+                  alpha: cfg.alpha, shape: cfg.shape };
 
   const size = () => {
     const dpr = Math.min(devicePixelRatio || 1, 2);
@@ -528,12 +542,15 @@ function driftFrame(){
     if (!L.on) continue;
     L.ctx.clearRect(0, 0, L.w, L.h);
     L.ctx.globalAlpha = L.alpha;
+    const paint = L.shape === 'bokeh' ? drawBokeh : drawPetal;
     for (const b of L.bits){
       b.y += b.vy / 60;
       b.x += Math.sin((b.y + b.a * 30) / 120) * (b.vx / 60);
       b.a += b.spin / 60;
-      if (b.y - b.r > L.h){ b.y = -b.r * 2; b.x = Math.random() * L.w; }
-      drawPetal(L.ctx, b);
+      // lights rise, petals fall
+      if (b.vy < 0 && b.y + b.r < 0){ b.y = L.h + b.r * 2; b.x = Math.random() * L.w; }
+      if (b.vy > 0 && b.y - b.r > L.h){ b.y = -b.r * 2; b.x = Math.random() * L.w; }
+      paint(L.ctx, b);
     }
   }
   requestAnimationFrame(driftFrame);
@@ -546,6 +563,18 @@ function setupDrift(){
     r: [4, 8], vy: [7, 17]
   });
   ['#invite', '#countdown'].forEach(sel => drift($(sel)));
+
+  // the ceremony: petals in the light
+  drift($('#day-one'), {
+    tints: PETAL.drift, alpha: 0.5, density: 34000, max: 20,
+    r: [5, 10], vy: [8, 20]
+  });
+
+  // the celebration: slow bokeh rising, like the room's lights out of focus
+  drift($('#day-two'), {
+    shape: 'bokeh', tints: PETAL.bokeh, alpha: 0.2,
+    density: 46000, max: 18, r: [16, 46], vy: [-14, -4]
+  });
 }
 
 /* ── one burst, on a yes ── */
