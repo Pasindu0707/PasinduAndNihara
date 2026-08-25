@@ -19,6 +19,7 @@ const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let guest = null;
+let guestKeyAsked = '';          // what ?to= claimed, matched or not
 
 
 /* ───────── guest lookup ───────── */
@@ -29,7 +30,7 @@ function guestKey(){
 }
 
 async function loadGuest(){
-  const key = guestKey();
+  const key = guestKeyAsked = guestKey();
   if (!key) return null;
   try{
     const res = await fetch('data/guests.json', { cache: 'no-cache' });
@@ -653,7 +654,7 @@ function setupShare(){
 }
 
 
-/* ───────── add to calendar ───────── *//* ───────── add to calendar ───────── */
+/* ───────── add to calendar ───────── */
 
 function setupCalendar(){
   $$('[data-ics]').forEach(btn => {
@@ -682,7 +683,7 @@ function setupRsvp(){
   const needsCount = seats === null || seats > 1;
   if (seats){
     countInput.value = seats;
-    countInput.max = seats > 2 ? '' : String(seats);
+    countInput.max = String(seats);
   }
 
   form.addEventListener('change', e => {
@@ -705,12 +706,24 @@ function setupRsvp(){
     submit.disabled = true;
 
     const coming = attending.value === 'yes';
+
+    // the form is novalidate, so the seat cap has to be applied here
+    let count = 0;
+    if (coming){
+      count = countField.hidden
+        ? (seats || 1)
+        : Math.max(1, Math.floor(Number(countInput.value) || 1));
+      if (seats) count = Math.min(count, seats);
+    }
+
     const payload = {
-      guestId:     guest ? guest.id : '',
+      // a mistyped link finds no guest — post what it asked for rather than a
+      // blank, so the row in the sheet can still be traced back to someone
+      guestId:     guest ? guest.id : guestKeyAsked,
       displayName: guest ? guest.name : (form.querySelector('#rsvpFor')?.textContent || ''),
       church:      '',
       party:       coming ? 'yes' : 'no',
-      count:       coming ? (countField.hidden ? (seats || 1) : Number(countInput.value) || 1) : 0,
+      count,
       phone:       $('#guestPhone').value.trim(),
       message:     $('#guestMessage').value.trim()
     };
@@ -725,6 +738,7 @@ function setupRsvp(){
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify(payload)
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const body = await res.json();
       if (!body.ok) throw new Error(body.error || 'rejected');
 

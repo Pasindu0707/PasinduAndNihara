@@ -46,9 +46,10 @@ bash tools/build-assets.sh
 node tools/build-guests.mjs
 ```
 
-That writes `site/data/guests.json` (published) and `tools/links.html` (local only —
-open it in a browser for one WhatsApp send button per guest). It also prints a list of
-anything odd in the sheet.
+That writes `site/data/guests.json` (published), `tools/links.html` (local only —
+open it in a browser for one WhatsApp send button per guest) and `GUEST_LINKS.md`
+(local only — a plain name-and-link table to paste anywhere). It also prints a list
+of anything odd in the sheet.
 
 **Deploy**
 
@@ -76,6 +77,19 @@ In the spreadsheet, **Wedding → Who hasn't opened it** builds a `NOT OPENED`
 tab listing every guest with no open on record. That menu comes from
 `tools/apps-script.gs`, which also handles RSVP posts — paste it over the
 script in the sheet and redeploy.
+
+## Known limitation — the sheet itself is world-readable
+
+`build-guests.mjs` pulls the sheet over the anonymous CSV endpoint, so the sheet has
+to be "anyone with the link can view" — and its id sits in this public repo. Anyone
+who reads the repo can read the whole GUESTS tab, **including the phone column**.
+That column is empty today. Before filling it in, either keep phone numbers in a
+separate sheet that is not shared, or take the sheet private and feed the script a
+CSV you export by hand:
+
+```bash
+node tools/build-guests.mjs guests.csv
+```
 
 ## Known limitation — the RSVP endpoint
 

@@ -14,7 +14,7 @@
  *   NOT OPENED  built on demand by "Wedding → Who hasn't opened it"
  */
 
-const SHEET_ID = 'PASTE_YOUR_SHEET_ID_HERE';
+const SHEET_ID = '1ta3FAOJj6wi5D-g9E-OQOhAfVgJ-5iTpyhlPsEhDGh0';
 
 const HEADERS = {
   RSVP:      ['timestamp', 'guest_id', 'display_name', 'church', 'party', 'count', 'phone', 'message'],
@@ -104,7 +104,10 @@ function buildNotOpened() {
       .forEach(r => { opened[String(r[1])] = r[0]; });
   }
 
+  // must stay identical to slug() in tools/build-guests.mjs, or the ids
+  // here will not match the ones the guests' links actually carry
   const slug = s => String(s).toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
   const out = [['name', 'phone', 'link id', 'opened']];

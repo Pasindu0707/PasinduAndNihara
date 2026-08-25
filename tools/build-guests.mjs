@@ -49,7 +49,7 @@ function parseCSV(text){
 }
 
 const slug = s => s.toLowerCase()
-  .normalize('NFD').replace(/[̀-ͯ]/g, '')
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .replace(/[^a-z0-9]+/g, '-')
   .replace(/^-|-$/g, '');
 
@@ -76,6 +76,7 @@ const iSide  = col('side');
 const iChurch= col('church');
 const iParty = col('party');
 const iSeats = col('seats');
+const iTable = col('table');
 const iPhone = col('phone');
 
 if (iName === -1) throw new Error(`No display_name column. Found: ${head.join(', ')}`);
@@ -102,9 +103,16 @@ for (const r of rows.slice(1)){
   const isCount = /^\d+$/.test(seatRaw);
   if (seatRaw && !isCount) warn.push(`"${name}": seats = "${seatRaw}" is not a number - read as a table label`);
 
+  if (!seatRaw) warn.push(`"${name}": no seats - the count field will start at 1`);
+
+  // the sheet has its own table column; a non-numeric seats value is the
+  // older way of saying the same thing, so it still stands in
+  const table = iTable > -1 ? (r[iTable] || '').trim() : '';
+
   const g = { id, name };
   if (isCount)  g.seats = seatNum;
-  if (seatRaw && !isCount) g.table = seatRaw;
+  if (table) g.table = table;
+  else if (seatRaw && !isCount) g.table = seatRaw;
   if (iChurch > -1) g.church = truthy(r[iChurch]);
   if (iParty  > -1) g.party  = truthy(r[iParty]);
   if (iSide   > -1 && r[iSide]) g.side = r[iSide].trim();
@@ -156,8 +164,28 @@ ${links.map(g => `<tr>
 </tr>`).join('\n')}
 </table>`);
 
+/* ── write the plain list of names and links (local only, no phones) ── */
+
+writeFileSync('GUEST_LINKS.md', [
+  '# Guest invitation links',
+  '',
+  `${guests.length} invitations, generated from the GUESTS tab on ${new Date().toISOString().slice(0, 10)}.`,
+  '',
+  'Each guest opens their own link. Anyone who opens the bare site URL gets',
+  '"you and your family" instead — nothing breaks.',
+  '',
+  '| # | Name | Seats | Link |',
+  '|---|------|-------|------|',
+  ...links.map((g, i) => {
+    const seats = guests[i].seats ?? '—';
+    return `| ${i + 1} | ${g.name.replace(/\|/g, '\\|')} | ${seats} | ${g.url} |`;
+  }),
+  ''
+].join('\n'));
+
 console.log(`✓ ${guests.length} guests → site/data/guests.json`);
 console.log(`✓ send sheet     → tools/links.html`);
+console.log(`✓ name + link list → GUEST_LINKS.md`);
 if (warn.length){
   console.log(`\n⚠ ${warn.length} thing(s) to check:`);
   warn.forEach(w => console.log(`  · ${w}`));
