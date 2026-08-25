@@ -54,7 +54,12 @@ of anything odd in the sheet.
 **Deploy**
 
 Push to `main`. The workflow in `.github/workflows/deploy.yml` publishes `site/`.
-In the repo settings, Pages → Source must be set to **GitHub Actions**.
+
+One thing has to be done by hand, once, before the first deploy will pass:
+**Settings → Pages → Build and deployment → Source → GitHub Actions**. Until that
+is set, `configure-pages` fails and every run stops at the second step — the
+workflow token is not allowed to turn Pages on by itself. After setting it, re-run
+the last workflow from the Actions tab.
 
 ## How the personalisation works
 
