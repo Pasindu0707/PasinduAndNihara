@@ -741,6 +741,8 @@ main > footer{ padding-block: var(--pad-block); }
   border-radius:2px;
   box-shadow:0 .8rem 2rem -1rem color-mix(in srgb, var(--ink) 55%, transparent);
 }
+/* Tall source frames: hold the crop near the top so faces stay in. */
+.beat__pic--high img{ object-position:50% 6%; }
 
 .beat__gap{
   margin:0;

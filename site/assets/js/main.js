@@ -9,7 +9,7 @@ const CONFIG = {
   party:    '2027-01-17T19:00:00+05:30',
   partyEnd: '2027-01-17T23:30:00+05:30',
   fallbackName: 'you and your family',
-  galleryCount: 7,
+  gallery: ['01', '03', '04', '06', '07'],   // shoot frames, in the order they hang
   music: 'assets/audio/theme.mp3',
   musicVolume: 0.22,        // background, not foreground
 };
@@ -362,8 +362,7 @@ function setupGallery(){
   if (!grid) return;
 
   const frag = document.createDocumentFragment();
-  for (let i = 1; i <= CONFIG.galleryCount; i++){
-    const n     = String(i).padStart(2, '0');
+  CONFIG.gallery.forEach((n, k) => {
     const small = `assets/img/gal-${n}-400.webp`;
     const large = `assets/img/gal-${n}-full.webp`;
 
@@ -371,7 +370,7 @@ function setupGallery(){
     img.src = small;
     img.loading = 'lazy';
     img.decoding = 'async';
-    img.alt = `Pasindu and Nihara — engagement photograph ${i}`;
+    img.alt = `Pasindu and Nihara — engagement photograph ${k + 1}`;
 
     const btn = document.createElement('button');
     btn.type = 'button';
@@ -386,7 +385,7 @@ function setupGallery(){
     // a missing size just drops out rather than showing a broken frame
     img.onerror = () => li.remove();
     frag.append(li);
-  }
+  });
   grid.append(frag);
 }
 
