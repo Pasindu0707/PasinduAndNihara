@@ -220,10 +220,25 @@ writeFileSync('GUEST_MESSAGES.md', [
   ])
 ].join('\n'));
 
+/* ── write the same messages as a one-column sheet (local only, no phones) ──
+   A message runs over several lines, so each one is a quoted CSV field. Google
+   Sheets keeps the line breaks inside the cell as long as the file is brought
+   in through File > Import rather than pasted. The BOM keeps the emoji intact. */
+
+const csvCell = s => `"${String(s).replace(/"/g, '""')}"`;
+
+writeFileSync('GUEST_MESSAGES.csv',
+  '﻿' + [
+    csvCell('Message'),
+    ...links.map(g => csvCell(messageText(g)))
+  ].join('\r\n') + '\r\n'
+);
+
 console.log(`✓ ${guests.length} guests → site/data/guests.json`);
 console.log(`✓ send sheet     → tools/links.html`);
 console.log(`✓ name + link list → GUEST_LINKS.md`);
 console.log(`✓ ready messages   → GUEST_MESSAGES.md`);
+console.log(`✓ one-column sheet → GUEST_MESSAGES.csv`);
 if (warn.length){
   console.log(`\n⚠ ${warn.length} thing(s) to check:`);
   warn.forEach(w => console.log(`  · ${w}`));
