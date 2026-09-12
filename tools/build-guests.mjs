@@ -132,11 +132,25 @@ writeFileSync('site/data/guests.json', JSON.stringify({
 
 /* ── write the local send-sheet (phones stay here, never deployed) ── */
 
-const msg = g => encodeURIComponent(
-  `${g.name},\n\nPasindu & Nihara are getting married, and we would love for you to be there.\n\n` +
-  `Your invitation:\n${g.url}\n\n16 January 2027 - St. Joseph's Church, Wennappuwa\n` +
-  `17 January 2027 - The Glasshouse\n\nPlease RSVP on the page before 28 December.`
-);
+// The message that goes out with the link. One wording, used by the WhatsApp
+// buttons in links.html and by the copy-and-paste list in GUEST_MESSAGES.md,
+// so the two can never drift apart.
+const messageText = g => [
+  `Dear ${g.name} ❤️`,
+  ``,
+  `With joyful hearts, we warmly invite you to celebrate one of the most special days of our lives as we begin our journey together.`,
+  ``,
+  `Please view our wedding invitation and all the event details through the link below 🌐:`,
+  ``,
+  g.url,
+  ``,
+  `Your presence would truly mean the world to us, and we would be honored to celebrate this beautiful moment together.`,
+  ``,
+  `With love,`,
+  `❤️ Pasindu & Nihara`
+].join('\n');
+
+const msg = g => encodeURIComponent(messageText(g));
 
 writeFileSync('tools/links.html', `<!DOCTYPE html><meta charset="utf-8">
 <title>Guest links - do not deploy</title>
@@ -183,9 +197,33 @@ writeFileSync('GUEST_LINKS.md', [
   ''
 ].join('\n'));
 
+/* ── write the ready-to-send message for every guest (local only, no phones) ── */
+
+writeFileSync('GUEST_MESSAGES.md', [
+  '# Ready-to-send messages',
+  '',
+  `${guests.length} messages, generated from the GUESTS tab on ${new Date().toISOString().slice(0, 10)}.`,
+  '',
+  'One block per guest, already addressed and carrying their own link.',
+  'Copy a block whole and send it. The same wording sits behind the WhatsApp',
+  '*Send* buttons in `tools/links.html`, so the two always agree.',
+  '',
+  '---',
+  '',
+  ...links.flatMap((g, i) => [
+    `## ${i + 1}. ${g.name}`,
+    '',
+    '```',
+    messageText(g),
+    '```',
+    ''
+  ])
+].join('\n'));
+
 console.log(`✓ ${guests.length} guests → site/data/guests.json`);
 console.log(`✓ send sheet     → tools/links.html`);
 console.log(`✓ name + link list → GUEST_LINKS.md`);
+console.log(`✓ ready messages   → GUEST_MESSAGES.md`);
 if (warn.length){
   console.log(`\n⚠ ${warn.length} thing(s) to check:`);
   warn.forEach(w => console.log(`  · ${w}`));
