@@ -15,3 +15,7 @@ HOW_IT_WORKS.md
 GUEST_LINKS_CHANGES.md
 GUEST_MESSAGES.md
 GUEST_MESSAGES.csv
+
+# local security notes, and the sheet export used to build guests (phones)
+SECURITY_GUIDE.md
+guests.csv

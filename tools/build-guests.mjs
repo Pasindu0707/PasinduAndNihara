@@ -55,6 +55,14 @@ const slug = s => s.toLowerCase()
 
 const truthy = v => /^(yes|y|true|1)$/i.test(String(v).trim());
 
+// A guest renamed in the sheet after their link went out keeps the id that
+// link carries — new slug on the left, the id already sent on the right.
+// Mirror any change here in KEEP_ID in tools/apps-script.gs.
+const KEEP_ID = {
+  'ms-amoda':         'mr-mrs-amoda',
+  'mr-prasad-family': 'prasad-peiris'
+};
+
 /* ── build ── */
 
 const rows = parseCSV(await source());
@@ -97,6 +105,7 @@ for (const r of rows.slice(1)){
   const n = (seen.get(id) || 0) + 1;
   seen.set(id, n);
   if (n > 1){ id = `${id}-${n}`; warn.push(`Duplicate name "${name}" → id "${id}"`); }
+  if (KEEP_ID[id]) id = KEEP_ID[id];
 
   const seatRaw = iSeats > -1 ? (r[iSeats] || '').trim() : '';
   const seatNum = parseInt(seatRaw, 10);

