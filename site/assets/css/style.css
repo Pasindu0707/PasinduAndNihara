@@ -473,25 +473,53 @@ main > footer{ padding-block: var(--pad-block); }
   color: color-mix(in srgb, var(--cream) 82%, transparent);
 }
 
-.hero__scroll{
-  position:absolute; z-index:3;
-  left:50%; bottom:clamp(2rem,5vw,3rem); translate:-50% 0;
-  width:1.5rem; height:2.75rem;
-  display:grid; place-items:start center;
-  border:1px solid color-mix(in srgb, var(--cream) 32%, transparent);
-  border-radius:1rem;
+/* quick links to each day — the dates without the scroll */
+.hero__jump{
+  display:flex; flex-wrap:wrap; justify-content:center;
+  gap:.6rem;
+  margin:clamp(1.5rem,4.5vw,2.25rem) auto 0;
+  max-width:34rem;
+  text-shadow:none;
 }
-.hero__scroll span{
-  width:2px; height:.5rem; margin-top:.5rem;
-  background: var(--gilt); border-radius:2px;
-  animation: scroll-tick 2s var(--ease) infinite;
+.hero__jump a{
+  flex:1 1 8.5rem; max-width:11rem;
+  display:grid; gap:.3rem;
+  padding:.7rem .9rem .65rem;
+  border:1px solid color-mix(in srgb, var(--gilt) 48%, transparent);
+  border-radius:2px;
+  background: color-mix(in srgb, var(--night) 34%, transparent);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  color: var(--lily);
+  text-decoration:none;
+  transition: background .3s var(--ease), border-color .3s var(--ease);
 }
-@keyframes scroll-tick{
-  0%{ opacity:0; transform:translateY(0); }
-  30%{ opacity:1; }
-  70%{ opacity:0; transform:translateY(.85rem); }
-  100%{ opacity:0; }
+.hero__jump a:hover,
+.hero__jump a:focus-visible{
+  background: color-mix(in srgb, var(--wine) 55%, transparent);
+  border-color: var(--gilt);
 }
+.hero__jump b{
+  font-family: var(--display);
+  font-weight:300; font-size:1.05rem; letter-spacing:.01em;
+}
+.hero__jump span{
+  font-size:.5625rem; letter-spacing:.26em; text-transform:uppercase;
+  color: color-mix(in srgb, var(--gilt) 92%, transparent);
+}
+/* RSVP sits under the two days as a quiet text link, not a third card */
+.hero__jump a.hero__jump-rsvp{
+  flex-basis:100%; max-width:none;
+  padding:.35rem 0 0;
+  border:0; background:none;
+  -webkit-backdrop-filter:none; backdrop-filter:none;
+  font-size:.625rem; letter-spacing:.24em; text-transform:uppercase;
+  color: color-mix(in srgb, var(--cream) 86%, transparent);
+  text-decoration:underline;
+  text-decoration-color: color-mix(in srgb, var(--gilt) 60%, transparent);
+  text-underline-offset:.45em;
+}
+.hero__jump a.hero__jump-rsvp:hover,
+.hero__jump a.hero__jump-rsvp:focus-visible{ background:none; color: var(--lily); }
 
 /* the hero keeps its petals under the frame, over the video */
 .hero .drift{ z-index:1; }

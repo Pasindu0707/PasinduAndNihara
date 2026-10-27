@@ -107,11 +107,15 @@
     <p class="hero__place reveal" style="--d:.74s">
       St. Joseph’s Church · Wennappuwa<br>
     </p>
+
+    <!-- one tap to the dates, for guests who just need the when & where -->
+    <nav class="hero__jump reveal" style="--d:.84s" aria-label="Jump to">
+      <a href="#ceremony"><b>Sat 16 Jan</b><span>The Ceremony</span></a>
+      <a href="#celebration"><b>Sun 17 Jan</b><span>The Celebration</span></a>
+      <a class="hero__jump-rsvp" href="#rsvp">Reply to the invitation</a>
+    </nav>
   </div>
 
-  <a class="hero__scroll" href="#invite" aria-label="Scroll to the invitation">
-    <span></span>
-  </a>
 </header>
 
 
@@ -372,7 +376,7 @@
              alt="Pasindu and Nihara in black and white">
       </figure>
 
-      <div class="day__copy">
+      <div class="day__copy" id="ceremony">
         <p class="label reveal">The first day</p>
 
         <p class="stamp reveal">
@@ -436,7 +440,7 @@
              alt="Pasindu and Nihara at an evening celebration">
       </figure>
 
-      <div class="day__copy">
+      <div class="day__copy" id="celebration">
         <p class="label reveal">The second day</p>
 
         <p class="stamp reveal">

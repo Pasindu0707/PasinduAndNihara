@@ -293,7 +293,14 @@ function setupScroll(){
     const target = document.querySelector(a.getAttribute('href'));
     if (!target) return;
     e.preventDefault();
-    lenis.scrollTo(target, { offset: -8 });
+    // lazy images above the target can load mid-flight and push it down,
+    // so settle onto wherever it actually ended up
+    lenis.scrollTo(target, {
+      offset: -8,
+      onComplete: () => {
+        if (Math.abs(target.getBoundingClientRect().top - 8) > 4) lenis.scrollTo(target, { offset: -8 });
+      }
+    });
   });
 }
 
