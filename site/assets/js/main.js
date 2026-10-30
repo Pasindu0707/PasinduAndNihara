@@ -730,7 +730,6 @@ function setupRsvp(){
       church:      '',
       party:       coming ? 'yes' : 'no',
       count,
-      phone:       $('#guestPhone').value.trim(),
       message:     $('#guestMessage').value.trim()
     };
 
