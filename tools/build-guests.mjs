@@ -60,8 +60,7 @@ const truthy = v => /^(yes|y|true|1)$/i.test(String(v).trim());
 // Mirror any change here in KEEP_ID in tools/apps-script.gs.
 const KEEP_ID = {
   'ms-amoda':         'mr-mrs-amoda',
-  'mr-prasad-family': 'prasad-peiris',
-  'mrs-dewmi-shenali': 'mr-dewmi-shenali'
+  'mr-prasad-family': 'prasad-peiris'
 };
 
 /* ── build ── */
