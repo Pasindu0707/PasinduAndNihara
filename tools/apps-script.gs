@@ -20,7 +20,8 @@ const SHEET_ID = '1ta3FAOJj6wi5D-g9E-OQOhAfVgJ-5iTpyhlPsEhDGh0';
 // after their link went out keep the id that link carries
 const KEEP_ID = {
   'ms-amoda':         'mr-mrs-amoda',
-  'mr-prasad-family': 'prasad-peiris'
+  'mr-prasad-family': 'prasad-peiris',
+  'mrs-dewmi-shenali': 'mr-dewmi-shenali'
 };
 
 const HEADERS = {
